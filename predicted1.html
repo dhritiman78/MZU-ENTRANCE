@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicted Model Paper 1 - Interactive Exam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Sticky Header containing Live Score Tracker -->
+    <header class="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="hover:bg-blue-700 bg-blue-800 px-3 py-1.5 rounded text-sm">&larr; Back to Dashboard</a>
+                <h1 class="text-lg font-bold">Predicted Paper 1</h1>
+            </div>
+            <div class="flex items-center gap-4 mt-2 md:mt-0 bg-blue-800 px-4 py-2 rounded-lg font-mono text-sm shadow-inner">
+                <span>Score: <span id="scoreTracker" class="font-bold text-yellow-300">0</span> / <span id="totalTracker">0</span></span>
+                <span>•</span>
+                <span>Progress: <span id="progressTracker" class="font-bold text-yellow-300">0%</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section Tabs -->
+    <div class="bg-white border-b border-gray-200 sticky top-[68px] z-40 shadow-sm">
+        <div class="container mx-auto px-4 py-2 max-w-4xl flex justify-between overflow-x-auto gap-2 text-sm font-medium">
+            <button onclick="scrollToSection('sec1')" class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg whitespace-nowrap">1. Teaching Aptitude</button>
+            <button onclick="scrollToSection('sec2')" class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg whitespace-nowrap">2. GK & Education</button>
+            <button onclick="scrollToSection('sec3')" class="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-lg whitespace-nowrap">3. Mathematics</button>
+            <button onclick="scrollToSection('sec4')" class="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg whitespace-nowrap">4. Science & Env</button>
+            <button onclick="scrollToSection('sec5')" class="bg-teal-50 text-teal-700 px-3 py-1.5 rounded-lg whitespace-nowrap">5. Social Sciences</button>
+            <button onclick="scrollToSection('sec6')" class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg whitespace-nowrap">6. Arts & Sports</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
+        <div id="quizContainer" class="space-y-12">
+            <!-- Questions dynamically generated here -->
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 text-center py-6 text-sm border-t border-gray-700">
+        <p>&copy; 2026 Practice Portal Engine. Built for performance.</p>
+    </footer>
+
+    <!-- Quiz Engine and Data -->
+    <script>
+        // Unique Predictive JSON Dataset matching structural limits (79 items)
+        const quizData = [
+            // Section 1: Teaching Aptitude (15 Questions)
+            { id: 1, section: "sec1", secTitle: "Section 1: Teaching Aptitude", q: "The foundational baseline for selecting a specific teaching strategy in a lesson plan should be:", options: { A: "The availability of digital infrastructure", B: "The instructional objectives mapped to learning outcomes", C: "The total length of the classroom period", D: "The structural formatting layout of the textbook" }, answer: "B" },
+            { id: 2, section: "sec1", q: "Which type of evaluation is engineered directly to discover deep-seated, persistent structural learning flaws during instruction?", options: { A: "Summative assessment", B: "Placement assessment", C: "Diagnostic assessment", D: "Standardized aptitude profiling" }, answer: "C" },
+            { id: 3, section: "sec1", q: "When a teacher structures assignments using varying tiers of complexity based on individual student readiness, they display:", options: { A: "Uniform mainstream instruction", B: "Differentiated instruction", C: "Teacher-centered rote optimization", D: "Behavioral compliance management" }, answer: "B" },
+            { id: 4, section: "sec1", q: "Micro-teaching focuses intently on isolating which architectural element of pedagogy?", options: { A: "Administrative management systems", B: "Specific classroom instruction skills practiced in small blocks", C: "Syllabus tracking metrics", D: "Parent-teacher relational dynamics" }, answer: "B" },
+            { id: 5, section: "sec1", q: "Which instructional framework requires learners to analyze raw case files and deduce overarching principles independently?", options: { A: "Deductive lecture delivery", B: "Inductive discovery method", C: "Direct imitation modeling", D: "Mechanical drill scripting" }, answer: "B" },
+            { id: 6, section: "sec1", q: "Within the revised Bloom's Taxonomy, the operational act of combining elements together to build a functional whole is classified under:", options: { A: "Analyzing", B: "Evaluating", C: "Creating", D: "Applying" }, answer: "C" },
+            { id: 7, section: "sec1", q: "Continuous and Comprehensive Evaluation (CCE) implies that monitoring protocols must be:", options: { A: "Administered purely during formal quarterly terminal weeks", B: "Woven continuously into academic and non-academic behavioral metrics", C: "Restricted strictly to quantitative computational testing", D: "Conducted exclusively by external state evaluators" }, answer: "B" },
+            { id: 8, section: "sec1", q: "In an authentic child-centered classroom design, the optimal structural function of the teacher is a:", options: { A: "Sole autocratic source of information", B: "Facilitator of structured active learning", C: "Detached, passive room observer", D: "Punitive regulatory enforcer" }, answer: "B" },
+            { id: 9, section: "sec1", q: "Inclusive educational policy dictates that children with neurodivergent profiles must be educated:", options: { A: "Exclusively within localized, isolated specialized facilities", B: "Alongside their typical peers in regular equitable learning spaces", C: "Only if they meet baseline scholastic historical standard minimums", D: "Via isolated asynchronous digital configurations at home" }, answer: "B" },
+            { id: 10, section: "sec1", q: "The comprehensive operational science of structural method implementation in teaching is formally named:", options: { A: "Andragogy", B: "Pedagogy", C: "Epistemology", D: "Sociology" }, answer: "B" },
+            { id: 11, section: "sec1", q: "Which characteristic introduces direct institutional bias, reducing instructional efficacy?", options: { A: "Objective empathy", B: "Deep contextual subject command", C: "Favouritism and subjective grading alignment", D: "Clarity of communication delivery" }, answer: "C" },
+            { id: 12, section: "sec1", q: "John Dewey's progressive stance on experiential frameworks is best summarized by the phrase:", options: { A: "Learning by doing", B: "Learning by passive observing", C: "Learning by regular testing", D: "Learning by mechanical transcription" }, answer: "A" },
+            { id: 13, section: "sec1", q: "A primary diagnostic metric used to establish structural reading baseline decoding blocks in students is called a:", options: { A: "Summative final grade assignment sheet", B: "Diagnostic skill profiling assessment", C: "National performance percentile rank matrix", D: "Psychometric competitive entrance standard matrix" }, answer: "B" },
+            { id: 14, section: "sec1", q: "Cooperative learning dynamics inherently mandate that group structural accountability hinges upon:", options: { A: "Individual competitive survival protocols within the group", B: "Shared team interdependence toward a unified structural objective", C: "Independent tracking isolated from team members", D: "Passive consumption of centralized lecture instructions" }, answer: "B" },
+            { id: 15, section: "sec1", q: "Which parameter forms a fundamental element of co-scholastic tracking under standard holistic CCE blueprints?", options: { A: "Advanced algebraic computation skills", B: "Laboratory organic chemistry experimental cycles", C: "Emotional resilience, value systems, and interpersonal dynamics", D: "Macroeconomic analytical content tracking" }, answer: "C" },
+
+            // Section 2: General Knowledge (18 Questions)
+            { id: 16, section: "sec2", secTitle: "Section 2: GK - School, Education, Books, Films, Institutions & Awards", q: "The National Education Policy (NEP) 2020 advocates for a structural reconfiguration of school curriculum replacing the old 10+2 system with:", options: { A: "5+3+3+4 structural model", B: "3+4+4+4 structural model", C: "4+3+3+2 structural model", D: "6+3+3+2 structural model" }, answer: "A" },
+            { id: 17, section: "sec2", q: "Which body acts as the statutory regulator monitoring technical and management university standards across India?", options: { A: "NCERT", B: "AICTE", C: "NTA", D: "CBSE" }, answer: "B" },
+            { id: 18, section: "sec2", q: "The flagship central scheme 'Samagra Shiksha' merges which pre-existing educational programs?", options: { A: "SSA, RMSA, and Teacher Education", B: "RUSA, SSA, and Mid-Day Meal", C: "RTE, NEET, and National Merit Scholarship", D: "Skill India, PM-Kisan, and SSA" }, answer: "A" },
+            { id: 19, section: "sec2", q: "Who served as the long-standing second President of India, in whose honor National Teachers' Day is celebrated?", options: { A: "Dr. Rajendra Prasad", B: "Dr. Sarvepalli Radhakrishnan", C: "Dr. Zakir Husain", D: "Dr. A.P.J. Abdul Kalam" }, answer: "B" },
+            { id: 20, section: "sec2", q: "Under Article 21A of the Indian Constitution, free and compulsory education is guaranteed to children aged:", options: { A: "3 to 18 years", B: "6 to 14 years", C: "5 to 15 years", D: "6 to 18 years" }, answer: "B" },
+            { id: 21, section: "sec2", q: "The prestigious Sahitya Akademi Award is granted for exceptional contributions in which domain?", options: { A: "Astrophysical research cycles", B: "Creative and analytical literature", C: "Grassroots sports coaching architecture", D: "Classical musical composition cycles" }, answer: "B" },
+            { id: 22, section: "sec2", q: "Which Indian musical composer secured an Academy Award (Oscar) for the globally viral track 'Naatu Naatu'?", options: { A: "A.R. Rahman", B: "M.M. Keeravani", C: "Ilaiyaraaja", D: "Amit Trivedi" }, answer: "B" },
+            { id: 23, section: "sec2", q: "Which civilian honor stands directly above the Padma Bhushan in structural hierarchy?", options: { A: "Padma Shri", B: "Padma Vibhushan", C: "Param Vir Chakra", D: "Arjuna Honor" }, answer: "B" },
+            { id: 24, section: "sec2", q: "The development of framework syllabi for school textbooks nationwide is primarily spearheaded by:", options: { A: "UGC", B: "NCERT", C: "NCTE", D: "NTA" }, answer: "B" },
+            { id: 25, section: "sec2", q: "Who authored the historical classic text 'Glimpses of World History'?", options: { A: "Mahatma Gandhi", B: "Jawaharlal Nehru", C: "Subhas Chandra Bose", D: "Rabindranath Tagore" }, answer: "B" },
+            { id: 26, section: "sec2", q: "The main statutory headquarters of Mizoram University (MZU) is physically situated at:", options: { A: "Lunglei", B: "Tanhril, Aizawl", C: "Champhai", D: "Saiha" }, answer: "B" },
+            { id: 27, section: "sec2", q: "The iconic national song 'Vande Mataram' was originally extracted from which literary work?", options: { A: "Gitanjali", B: "Anandamath", C: "Discovery of India", D: "Hind Swaraj" }, answer: "B" },
+            { id: 28, section: "sec2", q: "The Major Dhyan Chand Khel Ratna Award represents the highest pinnacle recognition for:", options: { A: "Distinguished lifetime civil administration", B: "Outstanding athletic performance in competitive international sports", C: "Innovative pedagogy research publications", D: "Advanced experimental scientific discovery" }, answer: "B" },
+            { id: 29, section: "sec2", q: "The inspiring educational autobiographical work titled 'Ignited Minds' was penned by:", options: { A: "Dr. A.P.J. Abdul Kalam", B: "Dr. Manmohan Singh", C: "Pranab Mukherjee", D: "Atal Bihari Vajpayee" }, answer: "A" },
+            { id: 30, section: "sec2", q: "The implementation of regulatory standards for institutional physical infrastructure in Indian teacher-training centers falls under:", options: { A: "AICTE", B: "UGC", C: "NCTE", D: "NCERT" }, answer: "C" },
+            { id: 31, section: "sec2", q: "Mizoram was upgraded from a Union Territory to a full component state of the Indian Union under which constitutional milestone?", options: { A: "Mizoram Peace Accord 1986", B: "North-Eastern Areas Reorganisation Act 1971", C: "Statehood Enactment Milestone 1972", D: "Mizo Accord Settlement 1990" }, answer: "A" },
+            { id: 32, section: "sec2", q: "Which unique geographical line intersects the state of Mizoram near its capital Aizawl?", options: { A: "Tropic of Capricorn", B: "Tropic of Cancer", C: "Equatorial Line", D: "Prime Meridian Baseline" }, answer: "B" },
+            { id: 33, section: "sec2", q: "What is the maximum structural number of recipients allowed to be awarded the Bharat Ratna in a single calendar year?", options: { A: "Two", B: "Three", C: "Four", D: "Five" }, answer: "B" },
+
+            // Section 3: Mathematics (15 Questions)
+            { id: 34, section: "sec3", secTitle: "Section 3: Mathematics", q: "Evaluate the exact computation value: 35% of 680.", options: { A: "218", B: "238", C: "248", D: "258" }, answer: "B" },
+            { id: 35, section: "sec3", q: "An item purchased for Rs. 750 is liquidated for Rs. 900. Calculate the exact profit percentage.", options: { A: "15%", B: "20%", C: "25%", D: "30%" }, answer: "B" },
+            { id: 36, section: "sec3", q: "Determine the mathematical average calculation for the values: 14, 22, 28, 36, and 40.", options: { A: "26", B: "28", C: "30", D: "32" }, answer: "B" },
+            { id: 37, section: "sec3", q: "Simplify via operational BODMAS rules: 12 + 6 / 2 x 4 - 5 =", options: { A: "19", B: "31", C: "14", D: "22" }, answer: "A" },
+            { id: 38, section: "sec3", q: "Find the exact evaluation value for the square root of 324.", options: { A: "16", B: "18", C: "22", D: "24" }, answer: "B" },
+            { id: 39, section: "sec3", q: "A logistics transport unit sustains a fixed rate of 75 km/h. How much distance does it cover in 4.5 hours?", options: { A: "312.5 km", B: "337.5 km", C: "350 km", D: "362.5 km" }, answer: "B" },
+            { id: 40, section: "sec3", q: "Solve for the single target variable x: 3x - 7 = 20.", options: { A: "8", B: "7", C: "9", D: "6" }, answer: "C" },
+            { id: 41, section: "sec3", q: "Calculate the Least Common Multiple (LCM) for the tracking group: 8, 12, and 18.", options: { A: "36", B: "72", C: "48", D: "144" }, answer: "B" },
+            { id: 42, section: "sec3", q: "Calculate the simple interest accumulated on a core principal sum of Rs. 4500 over 3 years evaluated at an annual interest yield rate of 8%.", options: { A: "Rs. 980", B: "Rs. 1040", C: "Rs. 1080", D: "Rs. 1120" }, answer: "C" },
+            { id: 43, section: "sec3", q: "If the total computational perimeter value of a square footprint measures 64 cm, evaluate its side length.", options: { A: "8 cm", B: "12 cm", C: "16 cm", D: "32 cm" }, answer: "C" },
+            { id: 44, section: "sec3", q: "Compute: 15% of 40% of 1500.", options: { A: "60", B: "90", C: "120", D: "150" }, answer: "B" },
+            { id: 45, section: "sec3", q: "Find the Highest Common Factor (HCF) for the tracking numbers: 36 and 54.", options: { A: "9", B: "18", C: "12", D: "6" }, answer: "B" },
+            { id: 46, section: "sec3", q: "A vehicle uses 15 liters of fuel to cover a distance grid of 180 km. Determine its operational fuel economy mileage.", options: { A: "10 km/l", B: "12 km/l", C: "14 km/l", D: "16 km/l" }, answer: "B" },
+            { id: 47, section: "sec3", q: "Identify the next logical incremental value in the mathematical series: 3, 9, 27, 81, ...", options: { A: "162", B: "216", C: "243", D: "324" }, answer: "C" },
+            { id: 48, section: "sec3", q: "A dealer sets a markup value 20% over cost baseline price, then subsequently grants a 10% commercial discount on the retail tag. What is his actual net profit output percentage?", options: { A: "6%", B: "8%", C: "10%", D: "12%" }, answer: "B" },
+
+            // Section 4: Science & Environment (12 Questions)
+            { id: 49, section: "sec4", secTitle: "Section 4: Science & Environment", q: "Which primary biological pigment captures light energy inside plant chloroplast systems during photosynthesis?", options: { A: "Carotenoid", B: "Anthocyanin", C: "Chlorophyll", D: "Phycobilin" }, answer: "C" },
+            { id: 50, section: "sec4", q: "Among atmospheric variables, which molecule presents the highest heat absorption capacity amplifying the greenhouse effect?", options: { A: "Diatomic Nitrogen", B: "Diatomic Oxygen", C: "Carbon dioxide", D: "Argon gas gas" }, answer: "C" },
+            { id: 51, section: "sec4", q: "The localized energetic transition of a material state jumping directly from a solid format into a gaseous phase without melting is called:", options: { A: "Condensation", B: "Sublimation", C: "Evaporation", D: "Deposition" }, answer: "B" },
+            { id: 52, section: "sec4", q: "Which energy system provides power continuously without draining finite terrestrial resource baselines?", options: { A: "Anthracite combustion matrices", B: "Petroleum refinement outputs", C: "Solar photovoltaic captures", D: "Natural methane extractions" }, answer: "C" },
+            { id: 53, section: "sec4", q: "The primary internal cleansing organ responsible for dynamic biochemical detoxification inside the human body is the:", options: { A: "Heart structure", B: "Lung tissue", C: "Liver structure", D: "Pancreatic system" }, answer: "C" },
+            { id: 54, section: "sec4", q: "Deficiencies in which critical vitamin cause bone mineral softening conditions such as Rickets?", options: { A: "Vitamin A", B: "Vitamin B1", C: "Vitamin D", D: "Vitamin C" }, answer: "C" },
+            { id: 55, section: "sec4", q: "The critical biological gas shield layer filtering out cosmic ultraviolet radiation waves is located within the:", options: { A: "Troposphere layer", B: "Stratosphere layer (Ozone concentration)", C: "Thermosphere boundary", D: "Mesosphere core" }, answer: "B" },
+            { id: 56, section: "sec4", q: "Which unique geographical biosphere region within India is classified as a primary global biodiversity hotspot?", options: { A: "The Indo-Gangetic Alluvial Grid", B: "The Western Ghats & Eastern Himalayas", C: "The Central Indian Drylands", D: "The Deccan Lava Plateau" }, answer: "B" },
+            { id: 57, section: "sec4", q: "Which active manual engineering methodology counteracts agricultural soil loss down steep sloped terrains?", options: { A: "Deep mechanical over-tilling", B: "Clear-cut deforestation clearance", C: "Terrace contour farming & afforestation", D: "Intensive pastoral overgrazing patterns" }, answer: "C" },
+            { id: 58, section: "sec4", q: "What is the structural chemical formula representation for gaseous Carbon Dioxide?", options: { A: "CO", B: "CO2", B: "H2O", D: "CH4" }, answer: "B" },
+            { id: 59, section: "sec4", q: "The rapid structural degradation of polar ice caps is primarily attributed directly to:", options: { A: "Elevations in cosmic deep space solar wind flares", B: "Aggractions of greenhouse gases retaining ambient terrestrial infrared energy", C: "Fluctuations in oceanic seismic trends", D: "Magnetic polar alignment drifts" }, answer: "B" },
+            { id: 60, section: "sec4", q: "Which domestic discard component breaks down naturally via biological decay paths?", options: { A: "Polyethylene packaging films", B: "Organic kitchen vegetable scrap peels", C: "Polyvinyl chloride tubes", D: "Aluminium container configurations" }, answer: "B" },
+
+            // Section 5: Social Sciences (10 Questions)
+            { id: 61, section: "sec5", secTitle: "Section 5: Social Sciences", q: "The historic sovereign document establishing the Republic of India was formally adopted by the Constituent Assembly on:", options: { A: "15 August 1947", B: "26 January 1950", C: "26 November 1949", D: "30 January 1948" }, answer: "C" },
+            { id: 62, section: "sec5", q: "Who presided over the drafting committee framework of the Indian Constitution as its primary architect?", options: { A: "Dr. Rajendra Prasad", B: "Pandit Jawaharlal Nehru", C: "Dr. B.R. Ambedkar", D: "Sardar Vallabhbhai Patel" }, answer: "C" },
+            { id: 63, section: "sec5", q: "The historic Civil Disobedience Movement kicking off with the Dandi Salt March was initiated in:", options: { A: "1920", B: "1930", C: "1942", D: "1915" }, answer: "B" },
+            { id: 64, section: "sec5", q: "Which element represents an active Fundamental Right legally protected under Article 14-18 of the Constitution?", options: { A: "Right to acquire unrestricted real estate", B: "Right to Equality", C: "Right to guaranteed institutional employment", D: "Right to complimentary municipal energy utilities" }, answer: "B" },
+            { id: 65, section: "sec5", q: "The structural boundary marker path known as the Tropic of Cancer intersects how many Indian states?", options: { A: "Six states", B: "Seven states", C: "Eight states", D: "Nine states" }, answer: "C" },
+            { id: 66, section: "sec5", q: "Which hydrological drainage channel system holds the rank of the longest river system contained inside India?", options: { A: "The Brahmaputra System", B: "The Godavari Basin", C: "The Ganga River System", D: "The Indus Tributary Grid" }, answer: "C" },
+            { id: 67, section: "sec5", q: "The landmark 73rd Constitutional Amendment Act formalized structural frameworks for which tier of government?", options: { A: "The Federal Union Executive Council", B: "The Provincial High Court Judiciary", C: "The Panchayati Raj Local Self-Government System", D: "The Municipal Metropolitan Development Boards" }, answer: "C" },
+            { id: 68, section: "sec5", q: "The non-violent Satyagraha campaign protesting the oppressive Rowlatt Acts was disrupted by the tragic Jallianwala Bagh Massacre in:", options: { A: "1915", B: "1919", C: "1922", D: "1931" }, answer: "B" },
+            { id: 69, section: "sec5", q: "Which state represents the single smallest geographic footprint area among all Indian states?", options: { A: "Sikkim", B: "Goa", C: "Tripura", D: "Mizoram" }, answer: "B" },
+            { id: 70, section: "sec5", q: "The historical Quit India national declaration calling for an immediate British exit was launched in August of:", options: { A: "1942", B: "1930", C: "1920", D: "1947" }, answer: "A" },
+
+            // Section 6: Arts, Music, Yoga, Theatre & Sports (9 Questions)
+            { id: 71, section: "sec6", secTitle: "Section 6: Arts, Music, Yoga, Theatre & Sports", q: "The dramatic storytelling classical dance format known as Kathakali is native to which state?", options: { A: "Tamil Nadu", B: "Kerala", C: "Andhra Pradesh", D: "Karnataka" }, answer: "B" },
+            { id: 72, section: "sec6", q: "The complex traditional multi-person rhythmic folk dance using colored vertical timber staves called the Cheraw Dance belongs to:", options: { A: "Assam", B: "Mizoram", C: "Meghalaya", D: "Nagaland" }, answer: "B" },
+            { id: 73, section: "sec6", q: "The explicit therapeutic execution of controlled internal breath manipulation cycles within classical Yoga is defined as:", options: { A: "Asana positioning", B: "Pranayama methodology", C: "Dhyana reflection", D: "Shatkarma purification" }, answer: "B" },
+            { id: 74, section: "sec6", q: "The global Summer Olympic competition events are systematically planned to execute in precise rhythmic intervals of every:", options: { A: "Two chronological years", B: "Three chronological years", C: "Four chronological years", D: "Five chronological years" }, answer: "C" },
+            { id: 75, section: "sec6", q: "The legendary instrumental virtuoism of Ustad Bismillah Khan was dedicated to mastering which traditional wind instrument?", options: { A: "Sitar array", B: "Shehnai configuration", C: "Flute system", D: "Sarod configuration" }, answer: "B" },
+            { id: 76, section: "sec6", q: "The intricate expressions and fast footwork patterns characteristic of the classical Kathak dance style originated in:", options: { A: "Odisha coastal plains", B: "North India", C: "Tamil Nadu temple complexes", D: "Kerala coastal belts" }, answer: "B" },
+            { id: 77, section: "sec6", q: "The distinctive regulatory term 'Deuce' is a scoring condition found in which sporting event?", options: { A: "Competitive Chess matrices", B: "Lawn Tennis & Badminton", C: "Snooker / Billiards grids", D: "Table Carrom tournaments" }, answer: "B" },
+            { id: 78, section: "sec6", q: "The unique folk art form involving colorful floor alignments created using dyed quartz powders or rice batters is called:", options: { A: "Rangoli / Alpana design", B: "Pattachitra iconography", C: "Madhubani canvas lining", D: "Kalamezhuthu traditional forms" }, answer: "A" },
+            { id: 79, section: "sec6", q: "The United Nations General Assembly officially declared June 21st to celebrate which global health discipline?", options: { A: "Traditional Holistic Homeopathy Day", B: "International Day of Yoga", C: "Global Mindfulness Meditation Cycle", D: "Universal Physical Fitness Framework Day" }, answer: "B" }
+        ];
+
+        let internalUserAnswers = {};
+        const totalQuestions = quizData.length;
+        document.getElementById('totalTracker').innerText = totalQuestions;
+
+        const container = document.getElementById('quizContainer');
+        let currentSectionId = "";
+        let sectionWrapper = null;
+
+        quizData.forEach((item, index) => {
+            if (item.secTitle) {
+                currentSectionId = item.section;
+                const secHeader = document.createElement('div');
+                secHeader.id = currentSectionId;
+                secHeader.className = "scroll-mt-36 border-b-4 border-blue-500 pb-2 mb-6 mt-8";
+                secHeader.innerHTML = `<h2 class="text-2xl font-black text-gray-900 tracking-tight">${item.secTitle}</h2>`;
+                container.appendChild(secHeader);
+
+                sectionWrapper = document.createElement('div');
+                sectionWrapper.className = "space-y-6";
+                container.appendChild(sectionWrapper);
+            }
+
+            let activeThemeColor = "border-l-blue-500 hover:bg-blue-50";
+            if (item.section === "sec2") activeThemeColor = "border-l-emerald-500 hover:bg-emerald-50";
+            if (item.section === "sec3") activeThemeColor = "border-l-purple-500 hover:bg-purple-50";
+            if (item.section === "sec4") activeThemeColor = "border-l-amber-500 hover:bg-amber-50";
+            if (item.section === "sec5") activeThemeColor = "border-l-teal-500 hover:bg-teal-50";
+            if (item.section === "sec6") activeThemeColor = "border-l-rose-500 hover:bg-rose-50";
+
+            const qCard = document.createElement('div');
+            qCard.className = `bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 ${activeThemeColor} transition`;
+
+            let optionsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">`;
+            for (const [key, value] of Object.entries(item.options)) {
+                optionsHTML += `
+                    <label id="label-${item.id}-${key}" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer transition text-sm font-medium">
+                        <input type="radio" name="item-${item.id}" value="${key}" onclick="evaluateAnswer(${item.id}, '${key}', '${item.answer}')" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                        <span>(${key}) ${value}</span>
+                    </label>
+                `;
+            }
+            optionsHTML += `</div>`;
+
+            optionsHTML += `
+                <div id="feedback-${item.id}" class="hidden mt-4 p-3 rounded-lg text-sm font-semibold flex items-center justify-between">
+                    <span id="feedback-text-${item.id}"></span>
+                    <span class="bg-white px-2 py-0.5 rounded border shadow-sm text-xs font-mono text-gray-600">Correct key: (${item.answer})</span>
+                </div>
+            `;
+
+            qCard.innerHTML = `
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Question ${index + 1}</span>
+                <p class="font-bold text-gray-900 text-base mt-1">${item.q}</p>
+                ${optionsHTML}
+            `;
+
+            sectionWrapper.appendChild(qCard);
+        });
+
+        function evaluateAnswer(questionId, selectedChoice, correctKey) {
+            const isCorrect = selectedChoice === correctKey;
+            internalUserAnswers[questionId] = isCorrect;
+
+            const feedbackBox = document.getElementById(`feedback-${questionId}`);
+            const feedbackText = document.getElementById(`feedback-text-${questionId}`);
+
+            feedbackBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('bg-green-50', 'text-green-700');
+                feedbackText.innerHTML = `✓ Correct choice!`;
+            } else {
+                feedbackBox.classList.add('bg-red-50', 'text-red-700');
+                feedbackText.innerHTML = `✗ Incorrect choice.`;
+            }
+
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const targetLabel = document.getElementById(`label-${questionId}-${key}`);
+                targetLabel.classList.remove('bg-green-100', 'border-green-400', 'bg-red-100', 'border-red-400', 'opacity-60');
+
+                if (key === correctKey) {
+                    targetLabel.classList.add('bg-green-100', 'border-green-400');
+                } else if (key === selectedChoice && !isCorrect) {
+                    targetLabel.classList.add('bg-red-100', 'border-red-400');
+                } else {
+                    targetLabel.classList.add('opacity-60');
+                }
+            });
+
+            recalculateMetrics();
+        }
+
+        function recalculateMetrics() {
+            let correctCount = 0;
+            let answeredCount = Object.keys(internalUserAnswers).length;
+
+            for (const qId in internalUserAnswers) {
+                if (internalUserAnswers[qId] === true) correctCount++;
+            }
+
+            document.getElementById('scoreTracker').innerText = correctCount;
+            const percentage = Math.round((answeredCount / totalQuestions) * 100);
+            document.getElementById('progressTracker').innerText = `${percentage}%`;
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) element.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

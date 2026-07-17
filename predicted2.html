@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicted Model Paper 2 - Interactive Exam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Sticky Header containing Live Score Tracker -->
+    <header class="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="hover:bg-blue-700 bg-blue-800 px-3 py-1.5 rounded text-sm">&larr; Back to Dashboard</a>
+                <h1 class="text-lg font-bold">Predicted Paper 2</h1>
+            </div>
+            <div class="flex items-center gap-4 mt-2 md:mt-0 bg-blue-800 px-4 py-2 rounded-lg font-mono text-sm shadow-inner">
+                <span>Score: <span id="scoreTracker" class="font-bold text-yellow-300">0</span> / <span id="totalTracker">0</span></span>
+                <span>•</span>
+                <span>Progress: <span id="progressTracker" class="font-bold text-yellow-300">0%</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section Tabs -->
+    <div class="bg-white border-b border-gray-200 sticky top-[68px] z-40 shadow-sm">
+        <div class="container mx-auto px-4 py-2 max-w-4xl flex justify-center gap-4 text-sm font-medium">
+            <button onclick="scrollToSection('sec1')" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg whitespace-nowrap">1. GK & Current Affairs (50 Qs)</button>
+            <button onclick="scrollToSection('sec2')" class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg whitespace-nowrap">2. Social Sciences (25 Qs)</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
+        <div id="quizContainer" class="space-y-12">
+            <!-- Questions dynamically generated here -->
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 text-center py-6 text-sm border-t border-gray-700">
+        <p>&copy; 2026 Practice Portal Engine. Built for performance.</p>
+    </footer>
+
+    <!-- Quiz Engine and Data -->
+    <script>
+        const quizData = [
+            // ==================== SECTION 1: GENERAL KNOWLEDGE & CURRENT AFFAIRS (50 Qs) ====================
+
+            // --- Sub-topic 1: FIFA World Cup Focus (20% = 10 Qs) ---
+            { id: 1, section: "sec1", secTitle: "Section 1: General Knowledge & Current Affairs", q: "Which three nations are co-hosting the mega FIFA World Cup tournament scheduled for June-July 2026?", options: { A: "Qatar, Saudi Arabia, and UAE", B: "United States, Canada, and Mexico", C: "Brazil, Argentina, and Uruguay", D: "Spain, Portugal, and Morocco" }, answer: "B" },
+            { id: 2, section: "sec1", q: "The total number of participating teams expanding in the 2026 FIFA World Cup matches stands at:", options: { A: "32 teams", B: "40 teams", C: "48 teams", D: "64 teams" }, answer: "C" },
+            { id: 3, section: "sec1", q: "Which iconic stadium is selected to host the high-profile Final match of the FIFA World Cup 2026?", options: { A: "MetLife Stadium (New Jersey)", B: "Azteca Stadium (Mexico City)", C: "SoFi Stadium (Los Angeles)", D: "BC Place (Vancouver)" }, answer: "A" },
+            { id: 4, section: "sec1", q: "Who won the coveted Golden Ball award as the best player at the conclusion of the FIFA World Cup 2022?", options: { A: "Kylian Mbappé", B: "Lionel Messi", C: "Luka Modrić", D: "Neymar Jr" }, answer: "B" },
+            { id: 5, section: "sec1", q: "Which nation claims the record for winning the highest number of FIFA Men's World Cup titles in history?", options: { A: "Germany", B: "Italy", C: "Argentina", D: "Brazil" }, answer: "D" },
+            { id: 6, section: "sec1", q: "Where was the first-ever FIFA Men's World Cup tournament hosted back in 1930?", options: { A: "Italy", B: "Uruguay", C: "France", D: "Brazil" }, answer: "B" },
+            { id: 7, section: "sec1", q: "Which country took home the championship title at the FIFA Women's World Cup tournament held in 2023?", options: { A: "England", B: "United States", C: "Spain", D: "Sweden" }, answer: "C" },
+            { id: 8, section: "sec1", q: "Who holds the record for the most total goals scored in individual FIFA Men's World Cup history?", options: { A: "Miroslav Klose", B: "Ronaldo Nazário", C: "Pelé", D: "Gerd Müller" }, answer: "A" },
+            { id: 9, section: "sec1", q: "What is the standard, fixed interval timeline between editions of the FIFA World Cup?", options: { A: "Every 2 years", B: "Every 3 years", C: "Every 4 years", D: "Every 5 years" }, answer: "C" },
+            { id: 10, section: "sec1", q: "Which dynamic forward scored a historic hat-trick in the thrilling FIFA World Cup Final match of 2022?", options: { A: "Lionel Messi", B: "Kylian Mbappé", C: "Antoine Griezmann", D: "Angel Di Maria" }, answer: "B" },
+
+            // --- Sub-topic 2: North-East India Focus (20% = 10 Qs) ---
+            { id: 11, section: "sec1", q: "Which state in North-East India features the highest geographic literacy rate according to recent census baselines?", options: { A: "Assam", B: "Mizoram", C: "Tripura", D: "Nagaland" }, answer: "B" },
+            { id: 12, section: "sec1", q: "The expansive national park 'Kaziranga National Park', famous for its one-horned rhinoceros population, is situated in:", options: { A: "Meghalaya", B: "Assam", C: "Arunachal Pradesh", D: "Manipur" }, answer: "B" },
+            { id: 13, section: "sec1", q: "The spectacular annual 'Hornbill Festival' is celebrated in which North-Eastern state?", options: { A: "Mizoram", B: "Nagaland", C: "Meghalaya", D: "Arunachal Pradesh" }, answer: "B" },
+            { id: 14, section: "sec1", q: "Which major river, originating in Tibet, acts as the primary hydrological lifeline across the valley of Assam?", options: { A: "Barak River", B: "Imphal River", C: "Brahmaputra River", D: "Tlawng River" }, answer: "C" },
+            { id: 15, section: "sec1", q: "The unique freshwater ecosystem 'Loktak Lake', hosting the world's only floating national park, is located in:", options: { A: "Manipur", B: "Meghalaya", C: "Mizoram", D: "Nagaland" }, answer: "A" },
+            { id: 16, section: "sec1", q: "Which city is popularly recognized and addressed as the 'Gateway to the North-East'?", options: { A: "Shillong", B: "Guwahati", C: "Aizawl", D: "Imphal" }, answer: "B" },
+            { id: 17, section: "sec1", q: "Which state of the North-East is officially bordered by Bangladesh on three distinct sides?", options: { A: "Mizoram", B: "Tripura", C: "Meghalaya", D: "Assam" }, answer: "B" },
+            { id: 18, section: "sec1", q: "The clean, scenic village 'Mawlynnong', recognized globally as Asia's cleanest village, is found in:", options: { A: "Mizoram", B: "Meghalaya", C: "Sikkim", D: "Nagaland" }, answer: "B" },
+            { id: 19, section: "sec1", q: "Which pass connects India's Arunachal Pradesh directly with Lhasa in Tibet?", options: { A: "Nathu La Pass", B: "Bomdila Pass", C: "Shipki La Pass", D: "Jelep La Pass" }, answer: "B" },
+            { id: 20, section: "sec1", q: "Who is the current serving Governor of the state of Mizoram?", options: { A: "Pu Lalduhoma", B: "Dr. Hari Babu Kambhampati", C: "Pu Zoramthanga", D: "Pu Laldenga" }, answer: "B" },
+
+            // --- Sub-topic 3: General Global, National & Others (60% = 30 Qs) ---
+            { id: 21, section: "sec1", q: "The highest legislative organ for constitutional formulation in India is the:", options: { A: "Supreme Court", B: "Parliament of India", C: "Presidential Secretariat", D: "NITI Aayog" }, answer: "B" },
+            { id: 22, section: "sec1", q: "Who holds the dynamic operational charge as the current Chief of the ISRO space organization?", options: { A: "Dr. K. Sivan", B: "Shri S. Somanath", C: "Dr. G. Satheesh Reddy", D: "Dr. A.S. Kiran Kumar" }, answer: "B" },
+            { id: 23, section: "sec1", q: "The principal monetary regulatory entity commanding interest benchmarks across India is the:", options: { A: "State Bank of India", B: "Reserve Bank of India", C: "Securities and Exchange Board of India", D: "Ministry of Finance" }, answer: "B" },
+            { id: 24, section: "sec1", q: "The massive international dynamic platform 'G20 Summit' was hosted by which country in late 2023?", options: { A: "Indonesia", B: "India", C: "Brazil", D: "South Africa" }, answer: "B" },
+            { id: 25, section: "sec1", q: "Which country has recently officially overtaken China to hold the highest human population globally?", options: { A: "United States", B: "India", C: "Indonesia", D: "Pakistan" }, answer: "B" },
+            { id: 26, section: "sec1", q: "The administrative state capital city of the state of Uttarakhand is:", options: { A: "Shimla", B: "Dehradun", C: "Haridwar", D: "Nainital" }, answer: "B" },
+            { id: 27, section: "sec1", q: "Which critical article gives the President of India constitutional power to impose national emergency provisions?", options: { A: "Article 352", B: "Article 356", C: "Article 360", D: "Article 370" }, answer: "A" },
+            { id: 28, section: "sec1", q: "The monumental global health agency 'World Health Organization' (WHO) maintains its base headquarters at:", options: { A: "New York, USA", B: "Geneva, Switzerland", C: "Paris, France", D: "London, UK" }, answer: "B" },
+            { id: 29, section: "sec1", q: "What basic baseline physical chemical parameter defines the pH value of completely neutral pure water?", options: { A: "5", B: "7", C: "9", D: "0" }, answer: "B" },
+            { id: 30, section: "sec1", q: "Which eminent personality authored the historic global best-selling work 'An Era of Darkness'?", options: { A: "Arundhati Roy", B: "Dr. Shashi Tharoor", C: "Vikram Seth", D: "Amitav Ghosh" }, answer: "B" },
+            { id: 31, section: "sec1", q: "The specialized global legal body 'International Court of Justice' is physically operational out of:", options: { A: "Geneva", B: "The Hague", C: "Vienna", D: "Brussels" }, answer: "B" },
+            { id: 32, section: "sec1", q: "Which structural element features the absolute highest electrical conductivity metrics under room temperatures?", options: { A: "Copper", B: "Silver", C: "Gold", D: "Aluminum" }, answer: "B" },
+            { id: 33, section: "sec1", q: "The prestigious Nobel Peace Prize allocation ceremony takes place annually inside which city?", options: { A: "Stockholm", B: "Oslo", C: "Copenhagen", D: "Helsinki" }, answer: "B" },
+            { id: 34, section: "sec1", q: "Which major structural canal shortens transit loops linking Europe directly with maritime ports in Asia?", options: { A: "Panama Canal", B: "Suez Canal", C: "Kiel Canal", D: "Erie Canal" }, answer: "B" },
+            { id: 35, section: "sec1", q: "The deep seismic trench 'Mariana Trench', holding the record for the lowest point on Earth, sits in the:", options: { A: "Atlantic Ocean", B: "Pacific Ocean", C: "Indian Ocean", D: "Arctic Ocean" }, answer: "B" },
+            { id: 36, section: "sec1", q: "Who currently serves as the Secretary-General guiding the administrative bodies of the United Nations?", options: { A: "Ban Ki-moon", B: "António Guterres", C: "Kofi Annan", D: "Tedros Adhanom" }, answer: "B" },
+            { id: 37, section: "sec1", q: "The primary structural component gas that makes up the largest fraction of Earth's atmosphere is:", options: { A: "Oxygen", B: "Nitrogen", C: "Carbon dioxide", D: "Argon" }, answer: "B" },
+            { id: 38, section: "sec1", q: "Which historical mountain pass connects Pakistan structurally with Afghanistan terrains?", options: { A: "Nathu La Pass", B: "Khyber Pass", C: "Zoji La Pass", D: "Shipki La Pass" }, answer: "B" },
+            { id: 39, section: "sec1", q: "The global non-governmental platform 'Amnesty International' deals primarily with tracking:", options: { A: "Global financial fraud prevention", B: "Human rights protection monitoring", C: "Wildlife endangered migrations", D: "Climate change temperature grids" }, answer: "B" },
+            { id: 40, section: "sec1", q: "Which core vitamin variant is completely soluble in water environments?", options: { A: "Vitamin A", B: "Vitamin D", C: "Vitamin C", D: "Vitamin K" }, answer: "C" },
+            { id: 41, section: "sec1", q: "The core computational metric 'GDP' stands for which standard tracking term?", options: { A: "Gross Domestic Product", B: "Gross Development Percentage", C: "General Domestic Parameter", D: "Government Debt Proportion" }, answer: "A" },
+            { id: 42, section: "sec1", q: "Which functional organ system inside the human body produces the structural endocrine compound insulin?", options: { A: "Liver", B: "Pancreas", C: "Kidney", D: "Thyroid gland" }, answer: "B" },
+            { id: 43, section: "sec1", q: "The historic environmental protection framework 'Kyoto Protocol' targets reductions in:", options: { A: "Marine microplastic dumps", B: "Greenhouse gas emissions", C: "Ozone-depleting substance outputs", D: "Industrial sound generation limits" }, answer: "B" },
+            { id: 44, section: "sec1", q: "Which celestial planet displays the absolute highest surface temperatures inside our solar system?", options: { A: "Mercury", B: "Venus", C: "Mars", D: "Jupiter" }, answer: "B" },
+            { id: 45, section: "sec1", q: "The premier literary honor 'Booker Prize' recognizes excellent literary works written originally in:", options: { A: "French", B: "English", C: "Spanish", D: "German" }, answer: "B" },
+            { id: 46, section: "sec1", q: "What specific operational component enables the human red blood cell grid to bind and transport oxygen?", options: { A: "Myoglobin", B: "Hemoglobin", C: "Plasma liquid", D: "White platelets" }, answer: "B" },
+            { id: 47, section: "sec1", q: "The key constitutional authority to create a new state inside the Union of India rests with:", options: { A: "The President", B: "The Parliament", C: "The Supreme Court", D: "The Governor council" }, answer: "B" },
+            { id: 48, section: "sec1", q: "Which international space agency successfully deployed the iconic James Webb Space Telescope?", options: { A: "ISRO", B: "NASA", C: "Roscosmos", D: "JAXA" }, answer: "B" },
+            { id: 49, section: "sec1", q: "The basic baseline operational unit tracking neurological signals inside human brain systems is the:", options: { A: "Nephron", B: "Neuron", C: "Alveoli", D: "Axon core" }, answer: "B" },
+            { id: 50, section: "sec1", q: "Which structural metal variant remains naturally in a completely liquid state under standard room temperatures?", options: { A: "Sodium", B: "Mercury", C: "Gallium", D: "Magnesium" }, answer: "B" },
+
+
+            // ==================== SECTION 2: SOCIAL SCIENCES (25 Qs) ====================
+
+            // --- Sub-topic 1: North-East & Mizo Specific (15% = 4 Qs) ---
+            { id: 51, section: "sec2", secTitle: "Section 2: Social Sciences", q: "The historic and culturally significant 'Mizo Peace Accord' was officially signed in which year?", options: { A: "1972", B: "1986", C: "1947", D: "1991" }, answer: "B" },
+            { id: 52, section: "sec2", q: "Which unique mountain peak is officially recognized as the highest geological elevation point inside Mizoram?", options: { A: "Phawngpui (Blue Mountain)", B: "Reiek Peak", C: "Hmuifang Tlang", D: "Lengteng Top" }, answer: "A" },
+            { id: 53, section: "sec2", q: "The distinct historic tribal governance pattern common across traditional Mizo communities revolved around the authority of the:", options: { A: "Democratic Council", B: "Lal (Chief)", C: "Panchayat Head", D: "Zemi Assembly" }, answer: "B" },
+            { id: 54, section: "sec2", q: "Which tribal community fought prominently alongside Mizo clans against the expansion of British colonial forces during the late 19th century?", options: { A: "The Kuki-Chin clans", B: "The Khasi chiefs", C: "The Ahom generals", D: "The Bodo community councils" }, answer: "A" },
+
+            // --- Sub-topic 2: General Social Sciences (85% = 21 Qs) ---
+            { id: 55, section: "sec2", q: "The historic dynamic independence struggle milestone 'Quit India Movement' commenced operations under the leadership of Mahatma Gandhi in:", options: { A: "1930", B: "1942", C: "1920", D: "1947" }, answer: "B" },
+            { id: 56, section: "sec2", q: "The architectural operational blueprint framework of the Indian Constitution outlines how many fundamental rights frameworks natively?", options: { A: "Five", B: "Six", C: "Seven", D: "Eight" }, answer: "B" },
+            { id: 57, section: "sec2", q: "Which prominent social reformer spearheaded structural campaigns that led to the formal legal abolition of the Sati practice in 1829?", options: { A: "Swami Vivekananda", B: "Raja Ram Mohan Roy", C: "Ishwar Chandra Vidyasagar", D: "Dayananda Saraswati" }, answer: "B" },
+            { id: 58, section: "sec2", q: "The fundamental operational baseline establishing local rural self-government models across India is known as the:", options: { A: "Municipal Corporation Framework", B: "Panchayati Raj System", C: "Zilla Parishad Secretariat", D: "Gram Sabha Directive" }, answer: "B" },
+            { id: 59, section: "sec2", q: "Which active structural mountain system forms the geographic baseline defined as the oldest fold mountains in India?", options: { A: "The Himalayan Range", B: "The Aravalli Range", C: "The Western Ghats System", D: "The Satpura Range" }, answer: "B" },
+            { id: 60, section: "sec2", q: "The primary ideological conceptual framework of the 'Preamble' to the Indian Constitution declares India as a:", options: { A: "Sovereign, Socialist, Secular, Democratic Republic", B: "Sovereign, Federal, Democratic State", C: "Unitary Centralized Socialist Monarchy", D: "Secular Parliamentary Capitalist Commonwealth" }, answer: "A" },
+            { id: 61, section: "sec2", q: "The tragic structural historical baseline 'Jallianwala Bagh Massacre' occurred in which city?", options: { A: "Lahore", B: "Amritsar", C: "Delhi", D: "Jalandhar" }, answer: "B" },
+            { id: 62, section: "sec2", q: "Which specific atmospheric zone acts as the primary layout space where all active weather shifts occur?", options: { A: "Stratosphere", B: "Troposphere", B: "Mesosphere", D: "Exosphere" }, answer: "B" },
+            { id: 63, section: "sec2", q: "The core conceptual layout model of 'Separation of Powers' splits the state engine into:", options: { A: "The Executive, the Legislature, and the Judiciary", B: "The President, the Prime Minister, and the Cabinet", C: "The Lok Sabha, the Rajya Sabha, and the Vidhan Sabha", D: "The Central, State, and Local governance tiers" }, answer: "A" },
+            { id: 64, section: "sec2", q: "Who held operational command as the first Governor-General of independent India?", options: { A: "Lord Canning", B: "Lord Mountbatten", C: "C. Rajagopalachari", D: "Lord Warren Hastings" }, answer: "B" },
+            { id: 65, section: "sec2", q: "The geographical parameter tracking lines drawn horizontally across global maps are called:", options: { A: "Longitudes", B: "Latitudes", C: "Isobars", D: "Meridians" }, answer: "B" },
+            { id: 66, section: "sec2", q: "The foundation of the historic Maurya Empire was laid down around 322 BCE by:", options: { A: "Ashoka the Great", B: "Chandragupta Maurya", C: "Samudragupta", D: "Harsha Vardhana" }, answer: "B" },
+            { id: 67, section: "sec2", q: "Which tier of the court engine sits as the highest court of appeal under the Indian judicial architecture?", options: { A: "The High Court", B: "The Supreme Court", C: "The District Sessions Court", D: "The National Tribunal Council" }, answer: "B" },
+            { id: 68, section: "sec2", q: "The core driver pushing standard global soil degradation cycles across open tropical farmlands is:", options: { A: "Controlled organic multi-cropping patterns", B: "Deforestation and intense wind/water erosion patterns", C: "Prolonged baseline winter shifts", D: "Subsurface groundwater table expansions" }, answer: "B" },
+            { id: 69, section: "sec2", q: "The active constitutional resource sharing blueprint 'Concurrent List' maps powers derived from which country's constitution?", options: { A: "United States", B: "Australia", C: "United Kingdom", D: "Ireland" }, answer: "B" },
+            { id: 70, section: "sec2", q: "The primary archaeological baseline discovery ruins of Harappa were first unraveled under the supervision of:", options: { A: "R.D. Banerji", B: "Daya Ram Sahni", C: "John Marshall", D: "Alexander Cunningham" }, answer: "B" },
+            { id: 71, section: "sec2", q: "Which specific core structural economic dynamic sector encapsulates agricultural farming and animal husbandry?", options: { A: "Primary Sector", B: "Secondary Sector", C: "Tertiary Sector", D: "Quaternary Sector" }, answer: "A" },
+            { id: 72, section: "sec2", q: "The foundational baseline for the dynamic right to legal institutional remedies is guarded under:", options: { A: "Article 19", B: "Article 32", C: "Article 21", D: "Article 14" }, answer: "B" },
+            { id: 73, section: "sec2", q: "The narrow physical land strip element linking two massive land networks across global systems is named an:", options: { A: "Archipelago", B: "Isthmus", C: "Strait", D: "Alluvial Delta" }, answer: "B" },
+            { id: 74, section: "sec2", q: "The historic battle milestone 'Battle of Plassey' took place in which year?", options: { A: "1764", B: "1757", C: "1857", D: "1789" }, answer: "B" },
+            { id: 75, section: "sec2", q: "Which component inside the design framework of the Indian Parliament is formally called the 'House of Elders'?", options: { A: "Lok Sabha", B: "Rajya Sabha", C: "Vidhan Sabha", D: "The Central Secretariat" }, answer: "B" }
+        ];
+
+        let internalUserAnswers = {};
+        const totalQuestions = quizData.length;
+        document.getElementById('totalTracker').innerText = totalQuestions;
+
+        const container = document.getElementById('quizContainer');
+        let currentSectionId = "";
+        let sectionWrapper = null;
+
+        quizData.forEach((item, index) => {
+            if (item.secTitle) {
+                currentSectionId = item.section;
+                const secHeader = document.createElement('div');
+                secHeader.id = currentSectionId;
+                secHeader.className = "scroll-mt-36 border-b-4 border-blue-500 pb-2 mb-6 mt-8";
+                secHeader.innerHTML = `<h2 class="text-2xl font-black text-gray-900 tracking-tight">${item.secTitle}</h2>`;
+                container.appendChild(secHeader);
+
+                sectionWrapper = document.createElement('div');
+                sectionWrapper.className = "space-y-6";
+                container.appendChild(sectionWrapper);
+            }
+
+            let activeThemeColor = "border-l-blue-500 hover:bg-blue-50";
+            if (item.section === "sec2") activeThemeColor = "border-l-emerald-500 hover:bg-emerald-50";
+
+            const qCard = document.createElement('div');
+            qCard.className = `bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 ${activeThemeColor} transition`;
+
+            let optionsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">`;
+            for (const [key, value] of Object.entries(item.options)) {
+                optionsHTML += `
+                    <label id="label-${item.id}-${key}" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer transition text-sm font-medium">
+                        <input type="radio" name="item-${item.id}" value="${key}" onclick="evaluateAnswer(${item.id}, '${key}', '${item.answer}')" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                        <span>(${key}) ${value}</span>
+                    </label>
+                `;
+            }
+            optionsHTML += `</div>`;
+
+            optionsHTML += `
+                <div id="feedback-${item.id}" class="hidden mt-4 p-3 rounded-lg text-sm font-semibold flex items-center justify-between">
+                    <span id="feedback-text-${item.id}"></span>
+                    <span class="bg-white px-2 py-0.5 rounded border shadow-sm text-xs font-mono text-gray-600">Correct key: (${item.answer})</span>
+                </div>
+            `;
+
+            qCard.innerHTML = `
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Question ${index + 1}</span>
+                <p class="font-bold text-gray-900 text-base mt-1">${item.q}</p>
+                ${optionsHTML}
+            `;
+
+            sectionWrapper.appendChild(qCard);
+        });
+
+        function evaluateAnswer(questionId, selectedChoice, correctKey) {
+            const isCorrect = selectedChoice === correctKey;
+            internalUserAnswers[questionId] = isCorrect;
+
+            const feedbackBox = document.getElementById(`feedback-${questionId}`);
+            const feedbackText = document.getElementById(`feedback-text-${questionId}`);
+
+            feedbackBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('bg-green-50', 'text-green-700');
+                feedbackText.innerHTML = `✓ Correct choice!`;
+            } else {
+                feedbackBox.classList.add('bg-red-50', 'text-red-700');
+                feedbackText.innerHTML = `✗ Incorrect choice.`;
+            }
+
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const targetLabel = document.getElementById(`label-${questionId}-${key}`);
+                targetLabel.classList.remove('bg-green-100', 'border-green-400', 'bg-red-100', 'border-red-400', 'opacity-60');
+
+                if (key === correctKey) {
+                    targetLabel.classList.add('bg-green-100', 'border-green-400');
+                } else if (key === selectedChoice && !isCorrect) {
+                    targetLabel.classList.add('bg-red-100', 'border-red-400');
+                } else {
+                    targetLabel.classList.add('opacity-60');
+                }
+            });
+
+            recalculateMetrics();
+        }
+
+        function recalculateMetrics() {
+            let correctCount = 0;
+            let answeredCount = Object.keys(internalUserAnswers).length;
+
+            for (const qId in internalUserAnswers) {
+                if (internalUserAnswers[qId] === true) correctCount++;
+            }
+
+            document.getElementById('scoreTracker').innerText = correctCount;
+            const percentage = Math.round((answeredCount / totalQuestions) * 100);
+            document.getElementById('progressTracker').innerText = `${percentage}%`;
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) element.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
