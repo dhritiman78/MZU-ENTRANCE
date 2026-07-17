@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Paper 2 - Interactive Exam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Sticky Header containing Live Score Tracker -->
+    <header class="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="hover:bg-blue-700 bg-blue-800 px-3 py-1.5 rounded text-sm">&larr; Back to Dashboard</a>
+                <h1 class="text-lg font-bold">Practice Paper 2</h1>
+            </div>
+            <div class="flex items-center gap-4 mt-2 md:mt-0 bg-blue-800 px-4 py-2 rounded-lg font-mono text-sm shadow-inner">
+                <span>Score: <span id="scoreTracker" class="font-bold text-yellow-300">0</span> / <span id="totalTracker">0</span></span>
+                <span>•</span>
+                <span>Progress: <span id="progressTracker" class="font-bold text-yellow-300">0%</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section Tabs -->
+    <div class="bg-white border-b border-gray-200 sticky top-[68px] z-40 shadow-sm">
+        <div class="container mx-auto px-4 py-2 max-w-4xl flex justify-between overflow-x-auto gap-2 text-sm font-medium">
+            <button onclick="scrollToSection('sec1')" class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg whitespace-nowrap">1. Teaching Aptitude</button>
+            <button onclick="scrollToSection('sec2')" class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg whitespace-nowrap">2. GK & Education</button>
+            <button onclick="scrollToSection('sec3')" class="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-lg whitespace-nowrap">3. Mathematics</button>
+            <button onclick="scrollToSection('sec4')" class="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg whitespace-nowrap">4. Science & Env</button>
+            <button onclick="scrollToSection('sec5')" class="bg-teal-50 text-teal-700 px-3 py-1.5 rounded-lg whitespace-nowrap">5. Social Sciences</button>
+            <button onclick="scrollToSection('sec6')" class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg whitespace-nowrap">6. Arts & Sports</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
+        <div id="quizContainer" class="space-y-12">
+            <!-- Questions dynamically generated here -->
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 text-center py-6 text-sm border-t border-gray-700">
+        <p>&copy; 2026 Practice Portal Engine. Built for performance.</p>
+    </footer>
+
+    <!-- Quiz Engine and Data -->
+    <script>
+        // Parsed JSON Array matching Paper 2 questions and answer key values exactly
+        const quizData = [
+            // Section 1: Teaching Aptitude
+            { id: 1, section: "sec1", secTitle: "Section 1: Teaching Aptitude", q: "The primary aim of teaching at the school level is to:", options: { A: "Complete the syllabus within the academic year", B: "Facilitate all-round development of the learner", C: "Prepare students only for examinations", D: "Maintain discipline in the classroom" }, answer: "B" },
+            { id: 2, section: "sec1", q: "Which of the following best describes 'formative assessment'?", options: { A: "Assessment conducted only at the end of the course", B: "Continuous assessment used to improve teaching-learning during the course", C: "Assessment used only for grading purposes", D: "A one-time standardized test" }, answer: "B" },
+            { id: 3, section: "sec1", q: "A teacher who adapts teaching methods according to the needs of individual learners is following the principle of:", options: { A: "Rote learning", B: "Individual differences", C: "Uniform instruction", D: "Textbook-centred teaching" }, answer: "B" },
+            { id: 4, section: "sec1", q: "Micro-teaching is primarily used for:", options: { A: "Teaching a whole class at once", B: "Training teachers by practising specific skills in a scaled-down setting", C: "Reducing the length of the school day", D: "Testing students' memory" }, answer: "B" },
+            { id: 5, section: "sec1", q: "Which teaching method encourages students to discover facts and relationships for themselves?", options: { A: "Lecture method", B: "Heuristic (discovery) method", C: "Dictation method", D: "Drill method" }, answer: "B" },
+            { id: 6, section: "sec1", q: "The 'Bloom's Taxonomy' is primarily related to:", options: { A: "Classroom furniture arrangement", B: "Classification of educational objectives", C: "School administration", D: "Curriculum printing" }, answer: "B" },
+            { id: 7, section: "sec1", q: "Which of the following is an example of continuous and comprehensive evaluation (CCE)?", options: { A: "Only a final year-end exam", B: "Assessment of both scholastic and co-scholastic areas throughout the year", C: "Only oral tests", D: "Assessment done once every three years" }, answer: "B" },
+            { id: 8, section: "sec1", q: "A good teacher primarily acts as a:", options: { A: "Dictator of rules", B: "Facilitator of learning", C: "Silent observer with no involvement", D: "Strict examiner only" }, answer: "B" },
+            { id: 9, section: "sec1", q: "Which of the following best supports inclusive education?", options: { A: "Separating children with disabilities into different schools", B: "Adapting teaching methods so all learners, regardless of ability, learn together", C: "Ignoring leamers who need extra support", D: "Only focusing on academically strong students" }, answer: "B" },
+            { id: 10, section: "sec1", q: "The term 'pedagogy' refers to:", options: { A: "The study of school buildings", B: "The method and practice of teaching", C: "The study of student attendance", D: "A type of school uniform" }, answer: "B" },
+            { id: 11, section: "sec1", q: "Which of the following is NOT a quality of an effective teacher?", options: { A: "Patience", B: "Subject knowledge", C: "Favouritism towards certain students", D: "Good communication skills" }, answer: "C" },
+            { id: 12, section: "sec1", q: "The 'activity method' of teaching is based on the philosophy of:", options: { A: "Learning by doing", B: "Learning by listening only", C: "Learning by punishment", D: "Learning by rote memorization" }, answer: "A" },
+            { id: 13, section: "sec1", q: "Which of the following best describes 'diagnostic testing' in education?", options: { A: "A test to identify specific learning difficulties of students", B: "A test given only to toppers", C: "A test that has no scoring", D: "A test conducted after graduation" }, answer: "A" },
+            { id: 14, section: "sec1", q: "Cooperative learning primarily involves:", options: { A: "Students working individually and competing with each other", B: "Students working together in small groups towards a common goal", C: "Teachers working alone without student input", D: "Only lecture-based instruction" }, answer: "B" },
+            { id: 15, section: "sec1", q: "Which of the following is considered a co-scholastic area in CCE?", options: { A: "Mathematics", B: "Science", C: "Life skills and values", D: "Social Science" }, answer: "C" },
+
+            // Section 2: General Knowledge
+            { id: 16, section: "sec2", secTitle: "Section 2: GK - School, Education, Books, Films, Institutions & Awards", q: "The National Education Policy (NEP) 2020 replaced the education policy of which earlier year?", options: { A: "1968", B: "1986", C: "1992", D: "2000" }, answer: "B" },
+            { id: 17, section: "sec2", q: "Which organisation administers the CUET (PG) examination in India?", options: { A: "UGC", B: "NCERT", C: "National Testing Agency (NTA)", D: "CBSE" }, answer: "C" },
+            { id: 18, section: "sec2", q: "The 'Sarva Shiksha Abhiyan' primarily aims at:", options: { A: "Universal higher education", B: "Universalisation of elementary education", C: "Promotion of foreign languages", D: "Sports development only" }, answer: "B" },
+            { id: 19, section: "sec2", q: "Who is regarded as the first Education Minister of independent India?", options: { A: "Sarvepalli Radhakrishnan", B: "Maavana Abul Kalam Azad", C: "Jawaharlal Nehru", D: "Rajendra Prasad" }, answer: "B" },
+            { id: 20, section: "sec2", q: "The Right of Children to Free and Compulsory Education (RTE) Act was passed in which year?", options: { A: "2005", B: "2009", C: "2012", D: "2015" }, answer: "B" },
+            { id: 21, section: "sec2", q: "The Jnanpith Award is given for excellence in:", options: { A: "Sports", B: "Literature", C: "Science", D: "Film direction" }, answer: "B" },
+            { id: 22, section: "sec2", q: "Which Indian film won the Academy Award (Oscar) for Best Documentary Short in 2023?", options: { A: "The Elephant Whisperers", B: "RRR (song category)", C: "Lunchbox", D: "Newton" }, answer: "A" },
+            { id: 23, section: "sec2", q: "The 'Padma Shri' is the:", options: { A: "Highest civilian award in India", B: "Fourth-highest civilian award in India", C: "A military honour only", D: "An award only for sportspersons" }, answer: "B" },
+            { id: 24, section: "sec2", q: "NCERT stands for:", options: { A: "National Council of Education Research and Training", B: "National Council of Educational Research and Training", C: "National Centre for Education Reform and Training", D: "National Council for Exams, Research and Testing" }, answer: "B" },
+            { id: 25, section: "sec2", q: "The author of the book 'Discovery of India' is:", options: { A: "Mahatma Gandhi", B: "Jawaharlal Nehru", C: "Rabindranath Tagore", D: "B.R. Ambedkar" }, answer: "B" },
+            { id: 26, section: "sec2", q: "Which of the following is a Central University located in Mizoram?", options: { A: "Mizoram University", B: "Gauhati University", C: "Tezpur University", D: "NEHU" }, answer: "A" },
+            { id: 27, section: "sec2", q: "The National Anthem of India was composed by:", options: { A: "Bankim Chandra Chattopadhyay", B: "Rabindranath Tagore", C: "Sarojini Naidu", D: "Muhammad Iqbal" }, answer: "B" },
+            { id: 28, section: "sec2", q: "Which award is regarded as the highest sporting honour for a coach in India?", options: { A: "Arjuna Award", B: "Dronacharya Award", C: "Khel Ratna Award", D: "Padma Bhushan" }, answer: "B" },
+            { id: 29, section: "sec2", q: "The book 'Wings of Fire' is an autobiography of:", options: { A: "A.P.J. Abdul Kalam", B: "Vikram Sarabhai", C: "Homi Bhabha", D: "Sam Manekshaw" }, answer: "A" },
+            { id: 30, section: "sec2", q: "Which of the following institutions is primarily responsible for teacher education standards in India?", options: { A: "UGC", B: "AICTE", C: "National Council for Teacher Education (NCTE)", D: "ICSSR" }, answer: "C" },
+            { id: 31, section: "sec2", q: "Mizoram attained full statehood in which year?", options: { A: "1972", B: "1986", C: "1987", D: "1990" }, answer: "C" },
+            { id: 32, section: "sec2", q: "The capital city of Mizoram is:", options: { A: "Kohima", B: "Aizawl", C: "Imphal", D: "Shillong" }, answer: "B" },
+            { id: 33, section: "sec2", q: "The 'Bharat Ratna' is India's:", options: { A: "Highest military award", B: "Highest civilian award", C: "Highest sports award", D: "Highest literary award" }, answer: "B" },
+
+            // Section 3: Mathematics
+            { id: 34, section: "sec3", secTitle: "Section 3: Mathematics", q: "The value of 15% of 240 is:", options: { A: "30", B: "36", C: "24", D: "40" }, answer: "B" },
+            { id: 35, section: "sec3", q: "If the cost price of an article is Rs. 400 and the selling price is Rs. 460, the profit percentage is:", options: { A: "10%", B: "12% ", C: "15%", D: "20%" }, answer: "B" },
+            { id: 36, section: "sec3", q: "The average of 10, 20, 30, 40 and 50 is:", options: { A: "25", B: "30", C: "35", D: "40" }, answer: "B" },
+            { id: 37, section: "sec3", q: "Simplify: 7 + 3 x 2 - 4 =", options: { A: "9", B: "16", C: "6", D: "18" }, answer: "A" },
+            { id: 38, section: "sec3", q: "The square root of 196 is:", options: { A: "12", B: "14", C: "16", D: "18" }, answer: "B" },
+            { id: 39, section: "sec3", q: "A train travels 300 km in 5 hours. Its speed is:", options: { A: "50 km/h", B: "60 km/h", C: "45 km/h", D: "55 km/h" }, answer: "B" },
+            { id: 40, section: "sec3", q: "If x + 5 = 12, then x is equal to:", options: { A: "5", B: "6", C: "7", D: "8" }, answer: "C" },
+            { id: 41, section: "sec3", q: "The LCM of 4 and 6 is:", options: { A: "10", B: "12", C: "24", D: "8" }, answer: "B" },
+            { id: 42, section: "sec3", q: "A sum of Rs. 1000 invested at 10% simple interest per annum earns interest in 2 years of:", options: { A: "Rs. 100", B: "Rs. 150", C: "Rs. 200", D: "Rs. 250" }, answer: "C" },
+            { id: 43, section: "sec3", q: "The perimeter of a square with side 9 cm is:", options: { A: "18 cm", B: "27 cm", C: "36 cm", D: "81 cm" }, answer: "C" },
+            { id: 44, section: "sec3", q: "What is 20% of 20% of 500?", options: { A: "10", B: "20", C: "40", D: "100" }, answer: "B" },
+            { id: 45, section: "sec3", q: "The HCF of 18 and 24 is:", options: { A: "3", B: "6", C: "9", D: "12" }, answer: "B" },
+            { id: 46, section: "sec3", q: "If a car covers 240 km using 20 litres of fuel, its mileage is:", options: { A: "10 km/l", B: "12 km/l", C: "14 km/l", D: "16 km/l" }, answer: "B" },
+            { id: 47, section: "sec3", q: "The next number in the series 2, 4, 8, 16, is:", options: { A: "24", B: "28", C: "32", D: "36" }, answer: "C" },
+            { id: 48, section: "sec3", q: "A shopkeeper marks an item 25% above cost price and gives a 10% discount. His net profit percentage is approximately:", options: { A: "10%", B: "12.5%", C: "15%", D: "20%" }, answer: "B" },
+
+            // Section 4: Science & Environment
+            { id: 49, section: "sec4", secTitle: "Section 4: Science & Environment", q: "Photosynthesis mainly occurs in which part of a plant?", options: { A: "Root", B: "Stem", C: "Leaf", D: "Flower" }, answer: "C" },
+            { id: 50, section: "sec4", q: "Which gas is most responsible for the greenhouse effect?", options: { A: "Oxygen", B: "Nitrogen", C: "Carbon dioxide", D: "Hydrogen" }, answer: "C" },
+            { id: 51, section: "sec4", q: "The process by which water changes from liquid to vapour is called:", options: { A: "Condensation", B: "Evaporation", C: "Precipitation", D: "Sublimation" }, answer: "B" },
+            { id: 52, section: "sec4", q: "Which of the following is a renewable source of energy?", options: { A: "Coal", B: "Petroleum", C: "Solar energy", D: "Natural gas" }, answer: "C" },
+            { id: 53, section: "sec4", q: "The human body's largest organ is the:", options: { A: "Liver", B: "Heart", C: "Skin", D: "Lung" }, answer: "C" },
+            { id: 54, section: "sec4", q: "Which vitamin is primarily obtained from sunlight?", options: { A: "Vitamin A", B: "Vitamin C", C: "Vitamin D", D: "Vitamin K" }, answer: "C" },
+            { id: 55, section: "sec4", q: "The layer of the atmosphere that protects Earth from harmful UV rays is the:", options: { A: "Troposphere", B: "Ozone layer", C: "Ionosphere", D: "Exosphere" }, answer: "B" },
+            { id: 56, section: "sec4", q: "Biodiversity hotspots in India include which of the following regions?", options: { A: "Thar Desert", B: "Eastern Himalayas", C: "Deccan Plateau", D: "Gangetic Plain" }, answer: "B" },
+            { id: 57, section: "sec4", q: "Which of the following practices helps in soil conservation?", options: { A: "Deforestation", B: "Overgrazing", C: "Afforestation", D: "Excessive tilling" }, answer: "C" },
+            { id: 58, section: "sec4", q: "The chemical symbol for water is:", options: { A: "CO2", B: "H2O", C: "NaCl", D: "O2" }, answer: "B" },
+            { id: 59, section: "sec4", q: "Global warming is primarily caused by an increase in:", options: { A: "Ozone in the stratosphere", B: "Greenhouse gases in the atmosphere", C: "Oxygen levels", D: "Groundwater levels" }, answer: "B" },
+            { id: 60, section: "sec4", q: "Which of the following is a biodegradable waste?", options: { A: "Plastic bottle", B: "Vegetable peel", C: "Glass bottle", D: "Aluminium can" }, answer: "B" },
+
+            // Section 5: Social Sciences
+            { id: 61, section: "sec5", secTitle: "Section 5: Social Sciences", q: "The Indian Constitution came into effect on:", options: { A: "15 August 1947", B: "26 January 1950", C: "26 November 1949", D: "2 October 1950" }, answer: "B" },
+            { id: 62, section: "sec5", q: "Who is known as the 'Father of the Indian Constitution'?", options: { A: "Mahatma Gandhi", B: "Jawaharlal Nehru", C: "Dr. B.R. Ambedkar", D: "Sardar Vallabhbhai Patel" }, answer: "C" },
+            { id: 63, section: "sec5", q: "The Quit India Movement was launched in which year?", options: { A: "1930", B: "1942", C: "1947", D: "1919" }, answer: "B" },
+            { id: 64, section: "sec5", q: "Which of the following is a fundamental right under the Indian Constitution?", options: { A: "Right to Property", B: "Right to Equality", C: "Right to a Job", D: "Right to Free Electricity" }, answer: "B" },
+            { id: 65, section: "sec5", q: "The Tropic of Cancer passes through how many Indian states?", options: { A: "6", B: "7", C: "8", D: "9" }, answer: "C" },
+            { id: 66, section: "sec5", q: "The longest river in India is:", options: { A: "Yamuna", B: "Godavari", C: "Ganga", D: "Brahmaputra" }, answer: "C" },
+            { id: 67, section: "sec5", q: "Panchayati Raj system in India is primarily related to:", options: { A: "Central government", B: "State government", C: "Local self-government", D: "Judiciary" }, answer: "C" },
+            { id: 68, section: "sec5", q: "The Jallianwala Bagh massacre took place in the year:", options: { A: "1915", B: "1919", C: "1922", D: "1930" }, answer: "B" },
+            { id: 69, section: "sec5", q: "Which of the following is the smallest state by area in India?", options: { A: "Sikkim", B: "Goa", C: "Tripura", D: "Mizoram" }, answer: "B" },
+            { id: 70, section: "sec5", q: "The 'Non-Cooperation Movement' was launched by Mahatma Gandhi in:", options: { A: "1920", B: "1930", C: "1942", D: "1919" }, answer: "A" },
+
+            // Section 6: Arts, Music, Yoga, Theatre & Sports
+            { id: 71, section: "sec6", secTitle: "Section 6: Arts, Music, Yoga, Theatre & Sports", q: "Kathak is a classical dance form that originated primarily in which region of India?", options: { A: "South India", B: "North India", C: "North-East India", D: "West India" }, answer: "B" },
+            { id: 72, section: "sec6", q: "Which of the following is a state of Northeast India known for the traditional Cheraw (bamboo) dance?", options: { A: "Assam", B: "Mizoram", C: "Sikkim", D: "Tripura" }, answer: "B" },
+            { id: 73, section: "sec6", q: "'Pranayama' in yoga refers to:", options: { A: "Physical postures", B: "Breathing exercises and control", C: "Meditation only", D: "Fasting practices" }, answer: "B" },
+            { id: 74, section: "sec6", q: "The Olympic Games are held once every:", options: { A: "2 years", B: "3 years", C: "4 years", D: "5 years" }, answer: "C" },
+            { id: 75, section: "sec6", q: "Which musical instrument is associated with Ravi Shankar?", options: { A: "Tabla", B: "Sitar", C: "Flute", D: "Violin" }, answer: "B" },
+            { id: 76, section: "sec6", q: "The classical dance form 'Bharatanatyam' originated in which state?", options: { A: "Kerala", B: "Tamil Nadu", C: "Odisha", D: "Andhra Pradesh" }, answer: "B" },
+            { id: 77, section: "sec6", q: "Which sport is associated with the term 'checkmate'?", options: { A: "Carrom", B: "Chess", C: "Badminton", D: "Table Tennis" }, answer: "B" },
+            { id: 78, section: "sec6", q: "The 'Shadow puppet' theatre tradition of India is popularly called:", options: { A: "Tholu Bommalata", B: "Ramlila", C: "Yakshagana", D: "Kathakali" }, answer: "A" },
+            { id: 79, section: "sec6", q: "Yoga is believed to have originated in:", options: { A: "China", B: "India", C: "Greece", D: "Egypt" }, answer: "B" }
+        ];
+
+        let internalUserAnswers = {};
+        const totalQuestions = quizData.length;
+        document.getElementById('totalTracker').innerText = totalQuestions;
+
+        const container = document.getElementById('quizContainer');
+        let currentSectionId = "";
+        let sectionWrapper = null;
+
+        quizData.forEach((item, index) => {
+            if (item.secTitle) {
+                currentSectionId = item.section;
+                const secHeader = document.createElement('div');
+                secHeader.id = currentSectionId;
+                secHeader.className = "scroll-mt-36 border-b-4 border-blue-500 pb-2 mb-6 mt-8";
+                secHeader.innerHTML = `<h2 class="text-2xl font-black text-gray-900 tracking-tight">${item.secTitle}</h2>`;
+                container.appendChild(secHeader);
+
+                sectionWrapper = document.createElement('div');
+                sectionWrapper.className = "space-y-6";
+                container.appendChild(sectionWrapper);
+            }
+
+            let activeThemeColor = "border-l-blue-500 hover:bg-blue-50";
+            if (item.section === "sec2") activeThemeColor = "border-l-emerald-500 hover:bg-emerald-50";
+            if (item.section === "sec3") activeThemeColor = "border-l-purple-500 hover:bg-purple-50";
+            if (item.section === "sec4") activeThemeColor = "border-l-amber-500 hover:bg-amber-50";
+            if (item.section === "sec5") activeThemeColor = "border-l-teal-500 hover:bg-teal-50";
+            if (item.section === "sec6") activeThemeColor = "border-l-rose-500 hover:bg-rose-50";
+
+            const qCard = document.createElement('div');
+            qCard.className = `bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 ${activeThemeColor} transition`;
+
+            let optionsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">`;
+            for (const [key, value] of Object.entries(item.options)) {
+                optionsHTML += `
+                    <label id="label-${item.id}-${key}" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer transition text-sm font-medium">
+                        <input type="radio" name="item-${item.id}" value="${key}" onclick="evaluateAnswer(${item.id}, '${key}', '${item.answer}')" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                        <span>(${key}) ${value}</span>
+                    </label>
+                `;
+            }
+            optionsHTML += `</div>`;
+
+            optionsHTML += `
+                <div id="feedback-${item.id}" class="hidden mt-4 p-3 rounded-lg text-sm font-semibold flex items-center justify-between">
+                    <span id="feedback-text-${item.id}"></span>
+                    <span class="bg-white px-2 py-0.5 rounded border shadow-sm text-xs font-mono text-gray-600">Correct key: (${item.answer})</span>
+                </div>
+            `;
+
+            qCard.innerHTML = `
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Question ${index + 1}</span>
+                <p class="font-bold text-gray-900 text-base mt-1">${item.q}</p>
+                ${optionsHTML}
+            `;
+
+            sectionWrapper.appendChild(qCard);
+        });
+
+        function evaluateAnswer(questionId, selectedChoice, correctKey) {
+            const isCorrect = selectedChoice === correctKey;
+            internalUserAnswers[questionId] = isCorrect;
+
+            const feedbackBox = document.getElementById(`feedback-${questionId}`);
+            const feedbackText = document.getElementById(`feedback-text-${questionId}`);
+
+            feedbackBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('bg-green-50', 'text-green-700');
+                feedbackText.innerHTML = `✓ Correct choice!`;
+            } else {
+                feedbackBox.classList.add('bg-red-50', 'text-red-700');
+                feedbackText.innerHTML = `✗ Incorrect choice.`;
+            }
+
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const targetLabel = document.getElementById(`label-${questionId}-${key}`);
+                targetLabel.classList.remove('bg-green-100', 'border-green-400', 'bg-red-100', 'border-red-400', 'opacity-60');
+
+                if (key === correctKey) {
+                    targetLabel.classList.add('bg-green-100', 'border-green-400');
+                } else if (key === selectedChoice && !isCorrect) {
+                    targetLabel.classList.add('bg-red-100', 'border-red-400');
+                } else {
+                    targetLabel.classList.add('opacity-60');
+                }
+            });
+
+            recalculateMetrics();
+        }
+
+        function toggleNavbarActive(activeId) {
+            // Can be expanded to track state colors on navbar elements
+        }
+
+        function recalculateMetrics() {
+            let correctCount = 0;
+            let answeredCount = Object.keys(internalUserAnswers).length;
+
+            for (const qId in internalUserAnswers) {
+                if (internalUserAnswers[qId] === true) correctCount++;
+            }
+
+            document.getElementById('scoreTracker').innerText = correctCount;
+            const percentage = Math.round((answeredCount / totalQuestions) * 100);
+            document.getElementById('progressTracker').innerText = `${percentage}%`;
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) element.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
