@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Paper 1 - Interactive Exam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Sticky Header containing Live Score Tracker -->
+    <header class="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="hover:bg-blue-700 bg-blue-800 px-3 py-1.5 rounded text-sm">&larr; Back to Dashboard</a>
+                <h1 class="text-lg font-bold">Practice Paper 1</h1>
+            </div>
+            <div class="flex items-center gap-4 mt-2 md:mt-0 bg-blue-800 px-4 py-2 rounded-lg font-mono text-sm shadow-inner">
+                <span>Score: <span id="scoreTracker" class="font-bold text-yellow-300">0</span> / 160</span>
+                <span>•</span>
+                <span>Progress: <span id="progressTracker" class="font-bold text-yellow-300">0%</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Section Tabs -->
+    <div class="bg-white border-b border-gray-200 sticky top-[68px] z-40 shadow-sm">
+        <div class="container mx-auto px-4 py-2 max-w-4xl flex justify-between overflow-x-auto gap-2 text-sm font-medium">
+            <button onclick="scrollToSection('sec1')" class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg whitespace-nowrap">1. English</button>
+            <button onclick="scrollToSection('sec2')" class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg whitespace-nowrap">2. GK & Current Affairs</button>
+            <button onclick="scrollToSection('sec3')" class="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-lg whitespace-nowrap">3. Teaching Aptitude</button>
+            <button onclick="scrollToSection('sec4')" class="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg whitespace-nowrap">4. Reasoning & Ability</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
+
+        <div id="quizContainer" class="space-y-12">
+            <!-- Questions are dynamically pushed here via JavaScript from JSON data -->
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 text-center py-6 text-sm border-t border-gray-700">
+        <p>&copy; 2026 Practice Portal Engine. Built for performance.</p>
+    </footer>
+
+    <!-- Quiz Engine and Data -->
+    <script>
+        // The structured complete JSON array mapping all 160 questions with key validation
+        const quizData = [
+            // SECTION 1: GENERAL ENGLISH
+            { id: 1, section: "sec1", secTitle: "SECTION 1: GENERAL ENGLISH", q: "Choose the correctly spelled word.", options: { A: "Recieve", B: "Receive", C: "Receeve", D: "Receve" }, answer: "B" },
+            { id: 2, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Abundant'.", options: { A: "Scarce", B: "Plentiful", C: "Limited", D: "Rare" }, answer: "B" },
+            { id: 3, section: "sec1", q: "Choose the word most OPPOSITE in meaning to 'Ancient'.", options: { A: "Old", B: "Modern", C: "Historic", D: "Aged" }, answer: "B" },
+            { id: 4, section: "sec1", q: "Fill in the blank: She has been living here ________ 2015.", options: { A: "since", B: "for", C: "from", D: "at" }, answer: "A" },
+            { id: 5, section: "sec1", q: "Choose the correct passive voice of: 'They are building a bridge.'", options: { A: "A bridge is built by them.", B: "A bridge is being built by them.", C: "A bridge was being built by them.", D: "A bridge has been built by them." }, answer: "B" },
+            { id: 6, section: "sec1", q: "Choose the correct one-word substitute for 'a person who talks too much'.", options: { A: "Garrulous", B: "Reticent", C: "Taciturn", D: "Eloquent" }, answer: "A" },
+            { id: 7, section: "sec1", q: "The idiom 'Bite the bullet' means:", options: { A: "To be afraid of something", B: "To face a difficult situation bravely", C: "To eat quickly", D: "To argue with someone" }, answer: "B" },
+            { id: 8, section: "sec1", q: "Choose the grammatically correct sentence.", options: { A: "He don't like tea.", B: "He doesn't likes tea.", C: "He doesn't like tea.", D: "He not like tea." }, answer: "C" },
+            { id: 9, section: "sec1", q: "Choose the word most OPPOSITE in meaning to 'Generous'.", options: { A: "Kind", B: "Stingy", C: "Charitable", D: "Giving" }, answer: "B" },
+            { id: 10, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Benevolent'.", options: { A: "Cruel", B: "Kind", C: "Selfish", D: "Harsh" }, answer: "B" },
+            { id: 11, section: "sec1", q: "Choose the correctly spelled word.", options: { A: "Occassion", B: "Ocassion", C: "Occasion", D: "Occasoin" }, answer: "C" },
+            { id: 12, section: "sec1", q: "Fill in the blank: I ________ to the market yesterday.", options: { A: "go", B: "went", C: "goes", D: "gone" }, answer: "B" },
+            { id: 13, section: "sec1", q: "Choose the correct plural form of 'Analysis'.", options: { A: "Analysises", B: "Analyses", C: "Analysis", D: "Analysys" }, answer: "B" },
+            { id: 14, section: "sec1", q: "Choose the correct preposition: He is good ________ mathematics.", options: { A: "in", B: "at", C: "on", D: "with" }, answer: "B" },
+            { id: 15, section: "sec1", q: "Choose the correct one-word substitute for 'one who cannot read or write'.", options: { A: "Illiterate", B: "Literate", C: "Ignorant", D: "Uneducated" }, answer: "A" },
+            { id: 16, section: "sec1", q: "Choose the word most OPPOSITE in meaning to 'Optimistic'.", options: { A: "Hopeful", B: "Pessimistic", C: "Cheerful", D: "Positive" }, answer: "B" },
+            { id: 17, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Diligent'.", options: { A: "Lazy", B: "Hardworking", C: "Careless", D: "Slow" }, answer: "B" },
+            { id: 18, section: "sec1", q: "Choose the correctly punctuated sentence.", options: { A: "Whats your name", B: "What's your name?", C: "Whats your name.", D: "What's your name" }, answer: "B" },
+            { id: 19, section: "sec1", q: "Identify the part with an error: 'Neither of the boys have done their homework'", options: { A: "Neither of the boys", B: "have done", C: "their homework", D: "No error" }, answer: "B" },
+            { id: 20, section: "sec1", q: "Fill in the blank: She is ________ honest girl.", options: { A: "a", B: "an", C: "the", D: "no article needed" }, answer: "B" },
+            { id: 21, section: "sec1", q: "Choose the correct word: The weather is very ________ today.", options: { A: "hotly", B: "hot", C: "heat", D: "hotness" }, answer: "B" },
+            { id: 22, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Candid'.", options: { A: "Honest", B: "Dishonest", C: "Secretive", D: "Rude" }, answer: "A" },
+            { id: 23, section: "sec1", q: "Choose the correct one-word substitute for 'a place where books are kept'.", options: { A: "Library", B: "Bookstore", C: "Archive", D: "Museum" }, answer: "A" },
+            { id: 24, section: "sec1", q: "Choose the correct comparative/superlative form: 'This is the ________ book of all.'", options: { A: "good", B: "better", C: "best", D: "well" }, answer: "C" },
+            { id: 25, section: "sec1", q: "The idiom 'A blessing in disguise' means:", options: { A: "A curse in every way", B: "Something that seemed bad but turns out good", C: "A lucky charm", D: "An unexpected gift" }, answer: "B" },
+            { id: 26, section: "sec1", q: "Choose the correctly spelled word.", options: { A: "Necessary", B: "Neccessary", C: "Neccesary", D: "Necessery" }, answer: "A" },
+            { id: 27, section: "sec1", q: "Fill in the blank: He is interested ________ music.", options: { A: "on", B: "in", C: "at", D: "with" }, answer: "B" },
+            { id: 28, section: "sec1", q: "Choose the word most OPPOSITE in meaning to 'Transparent'.", options: { A: "Clear", B: "Opaque", C: "Visible", D: "Bright" }, answer: "B" },
+            { id: 29, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Meticulous'.", options: { A: "Careless", B: "Careful", C: "Quick", B: "Lazy" }, answer: "B" },
+            { id: 30, section: "sec1", q: "Choose the grammatically correct sentence.", options: { A: "Each of the students have a book.", B: "Each of the students has a book.", C: "Each of the student have a book.", D: "Each of students has book." }, answer: "B" },
+            { id: 31, section: "sec1", q: "Choose the correct one-word substitute for 'a person who loves books'.", options: { A: "Bibliophile", B: "Bibliophobe", C: "Philanthropist", D: "Linguist" }, answer: "A" },
+            { id: 32, section: "sec1", q: "Choose the correct article: ________ university is known for its education programme.", options: { A: "A", B: "An", C: "The", D: "No article" }, answer: "A" },
+            { id: 33, section: "sec1", q: "Choose the word most OPPOSITE in meaning to 'Humble'.", options: { A: "Modest", B: "Arrogant", C: "Simple", D: "Polite" }, answer: "B" },
+            { id: 34, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Adversity'.", options: { A: "Prosperity", B: "Hardship", C: "Comfort", D: "Success" }, answer: "B" },
+            { id: 35, section: "sec1", q: "Fill in the blank: They have been married ________ ten years.", options: { A: "since", B: "for", C: "from", D: "during" }, answer: "B" },
+            { id: 36, section: "sec1", q: "Choose the correctly spelled word.", options: { A: "Recommend", B: "Recomend", C: "Reccommend", D: "Recommmend" }, answer: "A" },
+            { id: 37, section: "sec1", q: "The idiom 'Break the ice' means:", options: { A: "To start a conversation in a social setting", B: "To end a friendship", C: "To freeze something", D: "To cause trouble" }, answer: "A" },
+            { id: 38, section: "sec1", q: "Choose the correct one-word substitute for 'government by the people'.", options: { A: "Democracy", B: "Monarchy", C: "Autocracy", D: "Theocracy" }, answer: "A" },
+            { id: 39, section: "sec1", q: "Choose the word most OPPOSITE in meaning to 'Victory'.", options: { A: "Success", B: "Defeat", C: "Win", D: "Triumph" }, answer: "B" },
+            { id: 40, section: "sec1", q: "Choose the word most nearly SIMILAR in meaning to 'Robust'.", options: { A: "Weak", B: "Strong", C: "Fragile", D: "Delicate" }, answer: "B" },
+
+            // SECTION 2: GENERAL KNOWLEDGE & CURRENT AFFAIRS
+            { id: 41, section: "sec2", secTitle: "SECTION 2: GENERAL KNOWLEDGE & CURRENT AFFAIRS", q: "Who is known as the Father of the Nation in India?", options: { A: "Jawaharlal Nehru", B: "Mahatma Gandhi", C: "Subhas Chandra Bose", D: "B.R. Ambedkar" }, answer: "B" },
+            { id: 42, section: "sec2", q: "What is the capital of Mizoram?", options: { A: "Aizawl", B: "Imphal", C: "Shillong", D: "Kohima" }, answer: "A" },
+            { id: 43, section: "sec2", q: "Mizoram attained full statehood in the year:", options: { A: "1972", B: "1986", C: "1987", D: "1990" }, answer: "C" },
+            { id: 44, section: "sec2", q: "Which river is regarded as the lifeline of Mizoram?", options: { A: "Brahmaputra", B: "Tlawng (Dhaleswari)", C: "Barak", D: "Kaladan" }, answer: "B" },
+            { id: 45, section: "sec2", q: "On which date was the Constitution of India adopted by the Constituent Assembly?", options: { A: "26 January 1950", B: "26 November 1949", C: "15 August 1947", D: "2 October 1950" }, answer: "B" },
+            { id: 46, section: "sec2", q: "Who was the first Chief Minister of the state of Mizoram (1986-88)?", options: { A: "Laldenga", B: "Lal Thanhawla", C: "Zoramthanga", D: "R. Zamawia" }, answer: "A" },
+            { id: 47, section: "sec2", q: "The Mizoram Peace Accord (Mizo Accord), ending the insurgency, was signed in:", options: { A: "1985", B: "1986", C: "1987", D: "1988" }, answer: "B" },
+            { id: 48, section: "sec2", q: "Among the following, which Northeastern state has the smallest area?", options: { A: "Sikkim", B: "Tripura", C: "Mizoram", D: "Manipur" }, answer: "A" },
+            { id: 49, section: "sec2", q: "The Indian Parliament consists of:", options: { A: "Lok Sabha only", B: "Rajya Sabha only", C: "The President, Lok Sabha, and Rajya Sabha", D: "Lok Sabha and Rajya Sabha only" }, answer: "C" },
+            { id: 50, section: "sec2", q: "As of 2026, who is the President of India?", options: { A: "Ram Nath Kovind", B: "Droupadi Murmu", C: "Pranab Mukherjee", D: "APJ Abdul Kalam" }, answer: "B" },
+            { id: 51, section: "sec2", q: "As of 2026, who is the Prime Minister of India?", options: { A: "Narendra Modi", B: "Manmohan Singh", C: "Rahul Gandhi", D: "Amit Shah" }, answer: "A" },
+            { id: 52, section: "sec2", q: "As of 2026, who is the Chief Minister of Mizoram?", options: { A: "Zoramthanga", B: "Lal Thanhawla", C: "Lalduhoma", D: "Pu Vanlalawma" }, answer: "C" },
+            { id: 53, section: "sec2", q: "Lalduhoma, the current Chief Minister of Mizoram, belongs to which political party?", options: { A: "Mizo National Front", B: "Indian National Congress", C: "Zoram People's Movement", D: "Bharatiya Janata Party" }, answer: "C" },
+            { id: 54, section: "sec2", q: "Which of the following is a classical dance form of India?", options: { A: "Bharatanatyam", B: "Bhangra", C: "Garba", D: "Lavani" }, answer: "A" },
+            { id: 55, section: "sec2", q: "The Tropic of Cancer passes through how many Indian states?", options: { A: "6", B: "7", C: "8", D: "9" }, answer: "C" },
+            { id: 56, section: "sec2", q: "Which is the longest river in India?", options: { A: "Yamuna", B: "Godavari", C: "Ganga", D: "Brahmaputra" }, answer: "C" },
+            { id: 57, section: "sec2", q: "The 'Green Revolution' in India is primarily associated with an increase in:", options: { A: "Milk production", B: "Foodgrain (wheat/rice) production", C: "Fish production", D: "Oilseed production" }, answer: "B" },
+            { id: 58, section: "sec2", q: "Who wrote the Indian National Anthem 'Jana Gana Mana'?", options: { A: "Bankim Chandra Chatterjee", B: "Rabindranath Tagore", C: "Sarojini Naidu", D: "Muhammad Iqbal" }, answer: "B" },
+            { id: 59, section: "sec2", q: "The Reserve Bank of India (RBI) was established in the year:", options: { A: "1935", B: "1947", C: "1950", D: "1969" }, answer: "A" },
+            { id: 60, section: "sec2", q: "Which Article of the Indian Constitution deals with the Right to Education?", options: { A: "Article 19", B: "Article 21A", C: "Article 32", D: "Article 44" }, answer: "B" },
+            { id: 61, section: "sec2", q: "Mizoram shares an international border with which two countries?", options: { A: "Bangladesh and Myanmar", B: "China and Bhutan", C: "Nepal and Bangladesh", D: "Myanmar and Bhutan" }, answer: "A" },
+            { id: 62, section: "sec2", q: "The 'Chapchar Kut' is a traditional festival celebrated in:", options: { A: "Nagaland", B: "Mizoram", C: "Manipur", D: "Meghalaya" }, answer: "B" },
+            { id: 63, section: "sec2", q: "Who is regarded as the architect of the Indian Constitution?", options: { A: "Mahatma Gandhi", B: "Jawaharlal Nehru", C: "Dr. B.R. Ambedkar", D: "Sardar Vallabhbhai Patel" }, answer: "C" },
+            { id: 64, section: "sec2", q: "The National Education Policy (NEP) that replaced the earlier 1986 policy was released in:", options: { A: "2018", B: "2019", C: "2020", D: "2021" }, answer: "C" },
+            { id: 65, section: "sec2", q: "Which gas is most responsible for global warming?", options: { A: "Oxygen", B: "Carbon dioxide", C: "Nitrogen", D: "Hydrogen" }, answer: "B" },
+            { id: 66, section: "sec2", q: "The headquarters of the United Nations is located in:", options: { A: "Geneva", B: "New York", C: "Paris", D: "London" }, answer: "B" },
+            { id: 67, section: "sec2", q: "Which is the smallest planet in our solar system?", options: { A: "Mars", B: "Mercury", C: "Venus", D: "Earth" }, answer: "B" },
+            { id: 68, section: "sec2", q: "The Sun rises in the:", options: { A: "North", B: "South", C: "East", D: "West" }, answer: "C" },
+            { id: 69, section: "sec2", q: "Which vitamin is produced in the human body when exposed to sunlight?", options: { A: "Vitamin A", B: "Vitamin B12", C: "Vitamin C", D: "Vitamin D" }, answer: "D" },
+            { id: 70, section: "sec2", q: "The 'Look East Policy' of India (now 'Act East Policy') particularly focuses on relations with:", options: { A: "European nations", B: "South-East Asian nations", C: "African nations", D: "South American nations" }, answer: "B" },
+            { id: 71, section: "sec2", q: "Who was the first woman Prime Minister of India?", options: { A: "Sonia Gandhi", B: "Indira Gandhi", C: "Pratibha Patil", D: "Sarojini Naidu" }, answer: "B" },
+            { id: 72, section: "sec2", q: "Which day is observed as 'International Literacy Day'?", options: { A: "8 September", B: "5 September", C: "14 November", D: "21 February" }, answer: "A" },
+            { id: 73, section: "sec2", q: "'Statue of Unity', dedicated to Sardar Vallabhbhai Patel, is located in which state?", options: { A: "Maharashtra", B: "Madhya Pradesh", C: "Gujarat", D: "Rajasthan" }, answer: "C" },
+            { id: 74, section: "sec2", q: "The Indian Space Research Organisation (ISRO) is headquartered in:", options: { A: "New Delhi", B: "Bengaluru", C: "Hyderabad", D: "Chennai" }, answer: "B" },
+            { id: 75, section: "sec2", q: "Mizoram's economy is traditionally most dependent on which type of agriculture?", options: { A: "Jhum (shifting) cultivation", B: "Plantation agriculture", C: "Commercial dairy farming", D: "Fishery" }, answer: "A" },
+            { id: 76, section: "sec2", q: "Which is the currency of Japan?", options: { A: "Yuan", B: "Won", C: "Yen", D: "Ringgit" }, answer: "C" },
+            { id: 77, section: "sec2", q: "The Right to Information (RTI) Act was enacted in the year:", options: { A: "2002", B: "2005", C: "2009", D: "2012" }, answer: "B" },
+            { id: 78, section: "sec2", q: "Which of the following schemes is related to skill development for youth in India?", options: { A: "PM-Kisan", B: "Skill India Mission", C: "Ayushman Bharat", D: "Jal Jeevan Mission" }, answer: "B" },
+            { id: 79, section: "sec2", q: "Who is regarded as the founder of the Modern Olympic Games?", options: { A: "Pierre de Coubertin", B: "Juan Antonio Samaranch", C: "Avery Brundage", D: "Thomas Bach" }, answer: "A" },
+            { id: 80, section: "sec2", q: "The Mizoram Legislative Assembly: how many total seats does it have?", options: { A: "30", B: "40", C: "60", D: "90" }, answer: "B" },
+
+            // SECTION 3: TEACHING APTITUDE & PEDAGOGY
+            { id: 81, section: "sec3", secTitle: "SECTION 3: TEACHING APTITUDE & PEDAGOGY", q: "Teaching is best described as a process that is:", options: { A: "One-way transfer of information", B: "A bipolar, interactive process between teacher and learner", C: "Purely evaluative", D: "Independent of the learner's response" }, answer: "B" },
+            { id: 82, section: "sec3", q: "Which of the following is the MOST effective way to sustain students' interest in a classroom?", options: { A: "Strict discipline only", B: "Using varied teaching methods and activities", C: "Frequent surprise tests", D: "Lecturing continuously" }, answer: "B" },
+            { id: 83, section: "sec3", q: "According to Jean Piaget, a child in the 'concrete operational stage' can typically:", options: { A: "Think only in abstract terms", B: "Perform logical operations on concrete objects", C: "Show no logical thinking at all", D: "Understand only sensory experiences" }, answer: "B" },
+            { id: 84, section: "sec3", q: "Formative assessment is primarily used to:", options: { A: "Grade students at the end of a course", B: "Provide ongoing feedback to improve learning during instruction", C: "Rank students against each other", D: "Determine final promotion only" }, answer: "B" },
+            { id: 85, section: "sec3", q: "The term 'pedagogy' most accurately refers to:", options: { A: "The study of child psychology alone", B: "The method and practice of teaching", C: "School administration", D: "Curriculum printing" }, answer: "B" },
+            { id: 86, section: "sec3", q: "Which learning theory emphasizes learning through reinforcement and punishment?", options: { A: "Constructivism", B: "Behaviourism", C: "Humanism", D: "Cognitivism" }, answer: "B" },
+            { id: 87, section: "sec3", q: "A teacher who encourages students to construct their own understanding through experience is following which approach?", options: { A: "Behaviourist approach", B: "Constructivist approach", C: "Rote-learning approach", D: "Lecture-only approach" }, answer: "B" },
+            { id: 88, section: "sec3", q: "Which of the following is an example of an intrinsic motivator for a student?", options: { A: "A prize for the topper", B: "Fear of punishment", C: "Personal interest and curiosity in the subject", D: "Peer comparison" }, answer: "C" },
+            { id: 89, section: "sec3", q: "Inclusive education primarily aims to:", options: { A: "Separate children with disabilities into special schools only", B: "Provide equal learning opportunities to all children, including those with special needs, in the same classroom", C: "Focus only on gifted students", D: "Reduce the number of students in a class" }, answer: "B" },
+            { id: 90, section: "sec3", q: "Who is associated with the theory of 'Multiple Intelligences'?", options: { A: "B.F. Skinner", B: "Howard Gardner", C: "Ivan Pavlov", D: "Jean Piaget" }, answer: "B" },
+            { id: 91, section: "sec3", q: "Micro-teaching is best described as:", options: { A: "Teaching a very small number of students only", B: "A training technique to develop specific teaching skills in a scaled-down setting", C: "Teaching without lesson plans", D: "Teaching only through textbooks" }, answer: "B" },
+            { id: 92, section: "sec3", q: "The most appropriate role of a teacher in a child-centred classroom is that of a:", options: { A: "Strict authority figure only", B: "Facilitator and guide", C: "Passive observer", D: "Sole source of knowledge" }, answer: "B" },
+            { id: 93, section: "sec3", q: "Which of the following best describes 'continuous and comprehensive evaluation' (CCE)?", options: { A: "Only written examinations twice a year", B: "Regular assessment of both scholastic and co-scholastic aspects of a learner", C: "Evaluation only at the end of the academic year", D: "Evaluation based on a single test" }, answer: "B" },
+            { id: 94, section: "sec3", q: "According to Lev Vygotsky, the 'Zone of Proximal Development' refers to:", options: { A: "Tasks a child can do independently", B: "Tasks a child cannot do even with help", C: "The gap between what a child can do alone and what they can do with guidance", D: "A child's physical development stage" }, answer: "C" },
+            { id: 95, section: "sec3", q: "Which of the following is NOT a characteristic of a good lesson plan?", options: { A: "Clear learning objectives", B: "Flexibility to adapt to learners' needs", C: "Rigid content with no scope for questions", D: "Appropriate teaching aids" }, answer: "C" },
+            { id: 96, section: "sec3", q: "The primary purpose of a diagnostic test in teaching is to:", options: { A: "Assign final grades", B: "Identify specific learning difficulties of students", C: "Rank students in the class", D: "Test only memory" }, answer: "B" },
+            { id: 97, section: "sec3", q: "Which teaching aid is classified as an 'audio-visual' aid?", options: { A: "Chalkboard", B: "Textbook", C: "Educational film/video", D: "Printed worksheet" }, answer: "C" },
+            { id: 98, section: "sec3", q: "Cooperative learning primarily involves:", options: { A: "Students working individually and competing", B: "Students working in small groups towards a common goal", C: "Only teacher-led instruction", D: "Silent independent study only" }, answer: "B" },
+            { id: 99, section: "sec3", q: "Which of the following best defines 'curriculum'?", options: { A: "Only the textbooks used in a course", B: "The planned and guided set of learning experiences provided by a school", C: "Only classroom furniture and infrastructure", D: "Only extracurricular activities" }, answer: "B" },
+            { id: 100, section: "sec3", q: "A teacher using open-ended questions in class is mainly trying to promote:", options: { A: "Rote memorization", B: "Critical thinking and reasoning", C: "Silence in the classroom", D: "Guessing skills only" }, answer: "B" },
+            { id: 101, section: "sec3", q: "According to Bloom's Taxonomy, which of the following represents the HIGHEST order of cognitive thinking?", options: { A: "Remembering", B: "Understanding", C: "Applying", D: "Creating" }, answer: "D" },
+            { id: 102, section: "sec3", q: "Which of the following is a co-scholastic area typically assessed in schools?", options: { A: "Mathematics", B: "Science", C: "Discipline and values", D: "Social Science" }, answer: "C" },
+            { id: 103, section: "sec3", q: "The 'chalk and talk' method of teaching is generally considered:", options: { A: "A highly learner-centred method", B: "A traditional, teacher-centred method", C: "A form of experiential learning", D: "A group-based project method" }, answer: "B" },
+            { id: 104, section: "sec3", q: "Peer tutoring in a classroom refers to:", options: { A: "A teacher tutoring a single student privately", B: "Students helping and teaching each other under guidance", C: "Online tutoring only", D: "Parents tutoring their children at home" }, answer: "B" },
+            { id: 105, section: "sec3", q: "Which of the following best supports differentiated instruction?", options: { A: "Teaching all students in exactly the same way", B: "Adjusting teaching methods and content to suit varied learner needs", C: "Grouping only by age", D: "Ignoring individual learning styles" }, answer: "B" },
+            { id: 106, section: "sec3", q: "A rubric used in assessment is primarily meant to:", options: { A: "Provide clear criteria and standards for evaluating student work", B: "Replace all forms of testing", C: "Only be used for group projects", D: "Reduce transparency in grading" }, answer: "A" },
+            { id: 107, section: "sec3", q: "Which of the following is an example of a 'co-curricular' activity?", options: { A: "Mathematics class test", B: "School debate competition", C: "End-of-term written examination", D: "Homework assignment" }, answer: "B" },
+            { id: 108, section: "sec3", q: "The main purpose of remedial teaching is to:", options: { A: "Punish weak students", B: "Address specific learning gaps of underperforming students", C: "Replace regular teaching entirely", D: "Only teach gifted students" }, answer: "B" },
+            { id: 109, section: "sec3", q: "Which of the following best describes 'teacher-centred' teaching?", options: { A: "The teacher is the primary source and controller of classroom activity", B: "Students direct their own learning entirely", C: "Learning happens mainly through peer discussion", D: "Assessment is done only by students" }, answer: "A" },
+            { id: 110, section: "sec3", q: "A lesson plan's 'learning objectives' should ideally be:", options: { A: "Vague and general", B: "Specific, measurable, and achievable", C: "Decided only after the lesson ends", D: "Irrelevant to assessment" }, answer: "B" },
+            { id: 111, section: "sec3", q: "Which of the following is considered a 'projective' technique in educational psychology?", options: { A: "Multiple-choice test", B: "Thematic Apperception Test (TAT)", C: "True/False test", D: "Matching test" }, answer: "B" },
+            { id: 112, section: "sec3", q: "The term 'scaffolding' in teaching refers to:", options: { A: "Removing all support from learners immediately", B: "Providing temporary structured support that is gradually withdrawn as learners gain competence", C: "Physical school infrastructure", D: "A type of final examination" }, answer: "B" },
+            { id: 113, section: "sec3", q: "Which of the following is a key principle of child-centred education?", options: { A: "The child is treated as a passive recipient of knowledge", B: "The child's interests, needs, and pace of learning are central to teaching", C: "Only the syllabus matters, not the learner", D: "Strict uniformity in teaching all children" }, answer: "B" },
+            { id: 114, section: "sec3", q: "Action research in education is primarily conducted by teachers to:", options: { A: "Publish academic papers only", B: "Solve practical classroom problems and improve teaching practice", C: "Replace the school curriculum", D: "Avoid teaching duties" }, answer: "B" },
+            { id: 115, section: "sec3", q: "Which of the following best represents 'summative assessment'?", options: { A: "Daily classroom quizzes for feedback", B: "A final examination at the end of a course to evaluate overall learning", C: "Observing students during group work", D: "Informal questioning during a lesson" }, answer: "B" },
+            { id: 116, section: "sec3", q: "Team teaching involves:", options: { A: "A single teacher managing multiple classes alone", B: "Two or more teachers collaboratively planning and delivering instruction", C: "Students teaching without any teacher involvement", D: "Teaching only through television broadcasts" }, answer: "B" },
+            { id: 117, section: "sec3", q: "According to educational psychology, 'individual differences' among learners refer to:", options: { A: "Variations in abilities, interests, and learning styles among students", B: "Differences in school uniforms", C: "Differences in classroom furniture", D: "Differences in textbook editions" }, answer: "A" },
+            { id: 118, section: "sec3", q: "The primary aim of value education in schools is to:", options: { A: "Increase examination marks only", B: "Develop ethical, moral, and social values in students", C: "Replace all academic subjects", D: "Focus only on religious teaching" }, answer: "B" },
+            { id: 119, section: "sec3", q: "Which of the following best describes 'reflective teaching'?", options: { A: "Teaching without any self-evaluation", B: "A teacher critically examining and improving their own teaching practice", C: "Teaching only from memory", D: "Avoiding feedback from students" }, answer: "B" },
+            { id: 120, section: "sec3", q: "The National Council for Teacher Education (NCTE) primarily regulates:", options: { A: "School infrastructure funding", B: "Standards and norms for teacher education programmes in India", C: "Student scholarships", D: "University research grants" }, answer: "B" },
+
+            // SECTION 4: REASONING & MENTAL ABILITY
+            { id: 121, section: "sec4", secTitle: "SECTION 4: REASONING & MENTAL ABILITY", q: "Find the next number in the series: 2, 4, 8, 16, ________", options: { A: "24", B: "30", C: "32", D: "36" }, answer: "C" },
+            { id: 122, section: "sec4", q: "If 'BOOK' is coded as 'CPPL', how is 'PEN' coded?", options: { A: "QFO", B: "OFM", C: "QDO", D: "PFO" }, answer: "A" },
+            { id: 123, section: "sec4", q: "Find the odd one out.", options: { A: "Triangle", B: "Square", C: "Circle", D: "Fast" }, answer: "D" },
+            { id: 124, section: "sec4", q: "Pointing to a photograph, a man says, 'She is the daughter of my grandfather's only son.' How is the woman related to the man?", options: { A: "Mother", B: "Sister", C: "Aunt", D: "Wife" }, answer: "B" },
+            { id: 125, section: "sec4", q: "Complete the series: A, C, E, G, ________", options: { A: "H", B: "I", C: "J", D: "K" }, answer: "B" },
+            { id: 126, section: "sec4", q: "If in a certain code, 'CAT' is written as '3120', how is 'BAT' written?", options: { A: "2120", B: "2130", C: "3220", D: "2020" }, answer: "A" },
+            { id: 127, section: "sec4", q: "Find the missing number: 5, 10, 20, 40, ________", options: { A: "45", B: "60", C: "80", D: "70" }, answer: "C" },
+            { id: 128, section: "sec4", q: "If North becomes East, East becomes South, and so on, what will South become?", options: { A: "North", B: "West", C: "East", D: "South" }, answer: "B" },
+            { id: 129, section: "sec4", q: "Choose the word that does NOT belong with the others.", options: { A: "Apple", B: "Banana", C: "Carrot", D: "Mango" }, answer: "C" },
+            { id: 130, section: "sec4", q: "A is the brother of B. B is the sister of C. C is the father of D. How is A related to D?", options: { A: "Uncle", B: "Father", C: "Brother", D: "Grandfather" }, answer: "A" },
+            { id: 131, section: "sec4", q: "Find the next term: 1, 4, 9, 16, 25, ________", options: { A: "30", B: "36", C: "32", D: "49" }, answer: "B" },
+            { id: 132, section: "sec4", q: "If 'GARDEN' is coded as 'HBSEFO', what is the coding pattern?", options: { A: "Each letter is replaced by the next letter", B: "Each letter is replaced by the previous letter", C: "Letters are reversed", D: "Vowels are removed" }, answer: "A" },
+            { id: 133, section: "sec4", q: "Which number should replace the question mark? 7, 14, 21, 28, ?", options: { A: "30", B: "35", C: "32", D: "42" }, answer: "B" },
+            { id: 134, section: "sec4", q: "Ravi walks 5 km North, then turns right and walks 3 km. In which direction is he now facing?", options: { A: "North", B: "East", C: "South", D: "West" }, answer: "B" },
+            { id: 135, section: "sec4", q: "Find the odd one out.", options: { A: "Dog", B: "Cat", C: "Cow", D: "Chair" }, answer: "D" },
+            { id: 136, section: "sec4", q: "If MONDAY is coded as ONMYAD, what type of reasoning question is this?", options: { A: "Coding-Decoding", B: "Blood Relation", C: "Series Completion", D: "Direction Sense" }, answer: "A" },
+            { id: 137, section: "sec4", q: "Complete the analogy: Doctor: Hospital :: Teacher: ________", options: { A: "Clinic", B: "School", C: "Court", D: "Office" }, answer: "B" },
+            { id: 138, section: "sec4", q: "Complete the analogy: Pen: Write :: Knife : ________", options: { A: "Cut", B: "Draw", C: "Paint", D: "Read" }, answer: "A" },
+            { id: 139, section: "sec4", q: "If all Roses are Flowers and all Flowers need Sunlight, which conclusion is definitely true?", options: { A: "All Roses need Sunlight", B: "All Flowers are Roses", C: "No Rose needs Sunlight", D: "Some Flowers are not Roses" }, answer: "A" },
+            { id: 140, section: "sec4", q: "Find the missing number in the series: 3, 6, 11, 18, 27, ________", options: { A: "36", B: "38", C: "40", D: "39" }, answer: "B" },
+            { id: 141, section: "sec4", q: "A clock shows 3:15. What is the angle between the hour and minute hands?", options: { A: "0 degrees", B: "7.5 degrees", C: "15 degrees", D: "30 degrees" }, answer: "B" },
+            { id: 142, section: "sec4", q: "If Monday falls on the 1st of a month, what day will the 15th fall on?", options: { A: "Monday", B: "Tuesday", C: "Sunday", D: "Wednesday" }, answer: "A" },
+            { id: 143, section: "sec4", q: "Choose the correct mirror image logic: In a mirror, left and right appear:", options: { A: "Same", B: "Reversed", C: "Upside down", D: "Both reversed and upside down" }, answer: "B" },
+            { id: 144, section: "sec4", q: "Find the next letter group: AZ, BY, CX, ________", options: { A: "DW", B: "DE", C: "EW", D: "DV" }, answer: "A" },
+            { id: 145, section: "sec4", q: "Five friends are sitting in a row... Who is sitting in the middle?", options: { A: "P or Q", B: "Q", C: "R", D: "T" }, answer: "A" },
+            { id: 146, section: "sec4", q: "If '+' means '-', '-' means 'x', 'x' means '/' and '/' means '+', then 10 + 2 x 3 = ?", options: { A: "17", B: "12", C: "23", D: "8" }, answer: "D" },
+            { id: 147, section: "sec4", q: "Find the odd one out among the following numbers.", options: { A: "4", B: "9", C: "16", D: "20" }, answer: "D" },
+            { id: 148, section: "sec4", q: "A is taller than B but shorter than C. D is taller than C. Who is the tallest?", options: { A: "A", B: "B", C: "C", D: "D" }, answer: "D" },
+            { id: 149, section: "sec4", q: "Complete the series: Z, X, V, T, ________", options: { A: "S", B: "R", C: "Q", D: "P" }, answer: "B" },
+            { id: 150, section: "sec4", q: "If a boy walks 10 m East, 10 m South, then 10 m West, in which direction is he from the starting point?", options: { A: "North", B: "South", C: "East", D: "West" }, answer: "B" },
+            { id: 151, section: "sec4", q: "Which figure completes the analogy: Book is to Reading as Fork is to ________", options: { A: "Cooking", B: "Eating", C: "Cutting", D: "Serving" }, answer: "B" },
+            { id: 152, section: "sec4", q: "Find the next number: 100, 90, 81, 73, ________", options: { A: "66", B: "65", B: "64", D: "68" }, answer: "A" },
+            { id: 153, section: "sec4", q: "In a certain code, 'RAIN' is written as 'SBJO'. How is 'SNOW' written?", options: { A: "TOPX", B: "TOPY", C: "SOPX", D: "TPOX" }, answer: "A" },
+            { id: 154, section: "sec4", q: "Choose the number that does not fit the series: 2, 3, 5, 7, 9, 11", options: { A: "3", B: "5", C: "9", D: "11" }, answer: "C" },
+            { id: 155, section: "sec4", q: "If P is the father of Q, and Q is the sister of R, how is P related to R?", options: { A: "Father", B: "Uncle", C: "Brother", D: "Grandfather" }, answer: "A" },
+            { id: 156, section: "sec4", q: "Complete the analogy: Fish: Water :: Bird : ________", options: { A: "Nest", B: "Sky/Air", C: "Tree", D: "Egg" }, answer: "B" },
+            { id: 157, section: "sec4", q: "Find the missing term: 8, 27, 64, 125, ________", options: { A: "196", B: "216", C: "215", D: "225" }, answer: "B" },
+            { id: 158, section: "sec4", q: "If today is Wednesday, what day will it be after 90 days?", options: { A: "Tuesday", B: "Wednesday", C: "Thursday", D: "Monday" }, answer: "C" },
+            { id: 159, section: "sec4", q: "Choose the odd one out based on relationship type.", options: { A: "Father-Son", B: "Teacher-Student", C: "Doctor-Patient", D: "Pen-Paper" }, answer: "D" },
+            { id: 160, section: "sec4", q: "A is twice as old as B. Five years ago, A was three times as old as B. What is B's current age?", options: { A: "5", B: "10", C: "15", D: "20" }, answer: "B" }
+        ];
+
+        let internalUserAnswers = {};
+        const totalQuestions = quizData.length;
+
+        // Generate Quiz UI sections dynamically
+        const container = document.getElementById('quizContainer');
+        let currentSectionId = "";
+        let sectionWrapper = null;
+
+        quizData.forEach((item, index) => {
+            // Check if we need to insert a Section Title Header
+            if (item.secTitle) {
+                currentSectionId = item.section;
+                const secHeader = document.createElement('div');
+                secHeader.id = currentSectionId;
+                secHeader.className = "scroll-mt-36 border-b-4 border-blue-500 pb-2 mb-6 mt-8";
+                secHeader.innerHTML = `<h2 class="text-2xl font-black text-gray-900 tracking-tight">${item.secTitle}</h2>`;
+                container.appendChild(secHeader);
+
+                sectionWrapper = document.createElement('div');
+                sectionWrapper.className = "space-y-6";
+                container.appendChild(sectionWrapper);
+            }
+
+            // Define thematic coloration borders per section
+            let activeThemeColor = "border-l-blue-500 hover:bg-blue-50 checked:bg-blue-600";
+            if (item.section === "sec2") activeThemeColor = "border-l-emerald-500 hover:bg-emerald-50 checked:bg-emerald-600";
+            if (item.section === "sec3") activeThemeColor = "border-l-purple-500 hover:bg-purple-50 checked:bg-purple-600";
+            if (item.section === "sec4") activeThemeColor = "border-l-amber-500 hover:bg-amber-50 checked:bg-amber-600";
+
+            // Create standard layout cards
+            const qCard = document.createElement('div');
+            qCard.className = `bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 ${activeThemeColor.split(' ')[0]} transition`;
+
+            // Build question structural layout
+            let optionsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">`;
+            for (const [key, value] of Object.entries(item.options)) {
+                optionsHTML += `
+                    <label id="label-${item.id}-${key}" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer transition text-sm font-medium">
+                        <input type="radio" name="item-${item.id}" value="${key}" onclick="evaluateAnswer(${item.id}, '${key}', '${item.answer}')" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                        <span>(${key}) ${value}</span>
+                    </label>
+                `;
+            }
+            optionsHTML += `</div>`;
+
+            // Hidden validation block revealed upon click interaction
+            optionsHTML += `
+                <div id="feedback-${item.id}" class="hidden mt-4 p-3 rounded-lg text-sm font-semibold flex items-center justify-between">
+                    <span id="feedback-text-${item.id}"></span>
+                    <span class="bg-white px-2 py-0.5 rounded border shadow-sm text-xs font-mono text-gray-600">Correct key: (${item.answer})</span>
+                </div>
+            `;
+
+            qCard.innerHTML = `
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Question ${index + 1}</span>
+                <p class="font-bold text-gray-900 text-base mt-1">${item.q}</p>
+                ${optionsHTML}
+            `;
+
+            sectionWrapper.appendChild(qCard);
+        });
+
+        // Realtime answer validation handler logic
+        function evaluateAnswer(questionId, selectedChoice, correctKey) {
+            // Check if already answered to prevent duplication re-scoring
+            const wasAnswered = internalUserAnswers.hasOwnProperty(questionId);
+            const wasCorrect = wasAnswered && internalUserAnswers[questionId] === true;
+
+            const isCorrect = selectedChoice === correctKey;
+            internalUserAnswers[questionId] = isCorrect;
+
+            // Target DOM nodes dynamically
+            const feedbackBox = document.getElementById(`feedback-${questionId}`);
+            const feedbackText = document.getElementById(`feedback-text-${questionId}`);
+
+            feedbackBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700');
+
+            // Highlight text context based on accuracy logic
+            if (isCorrect) {
+                feedbackBox.classList.add('bg-green-50', 'text-green-700');
+                feedbackText.innerHTML = `✓ Correct choice!`;
+            } else {
+                feedbackBox.classList.add('bg-red-50', 'text-red-700');
+                feedbackText.innerHTML = `✗ Incorrect choice.`;
+            }
+
+            // Loop and reset layout choice label highlighting
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const targetLabel = document.getElementById(`label-${questionId}-${key}`);
+                targetLabel.classList.remove('bg-green-100', 'border-green-400', 'bg-red-100', 'border-red-400', 'opacity-60');
+
+                if (key === correctKey) {
+                    targetLabel.classList.add('bg-green-100', 'border-green-400');
+                } else if (key === selectedChoice && !isCorrect) {
+                    targetLabel.classList.add('bg-red-100', 'border-red-400');
+                } else {
+                    targetLabel.classList.add('opacity-60');
+                }
+            });
+
+            // Update interactive stats counter trackers
+            recalculateMetrics();
+        }
+
+        function recalculateMetrics() {
+            let correctCount = 0;
+            let answeredCount = Object.keys(internalUserAnswers).length;
+
+            for (const qId in internalUserAnswers) {
+                if (internalUserAnswers[qId] === true) correctCount++;
+            }
+
+            document.getElementById('scoreTracker').innerText = correctCount;
+            const percentage = Math.round((answeredCount / totalQuestions) * 100);
+            document.getElementById('progressTracker').innerText = `${percentage}%`;
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) element.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
